@@ -148,6 +148,197 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /* ---------- Real SOS requests from backend (Volunteer SOS page) ---------- */
+  const volunteerSosList = document.getElementById('volunteerSosList');
+  const SOS_API_BASE = 'http://localhost:5000/api/sos';
+  const VOLUNTEER_ID = 'test-volunteer-001';
+  const VOLUNTEER_NAME = 'Test Volunteer';
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function formatSosTime(value) {
+    if (!value) return 'Just now';
+    const created = new Date(value);
+    if (Number.isNaN(created.getTime())) return escapeHtml(value);
+
+    const diffMs = Date.now() - created.getTime();
+    const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return diffMins + ' min ago';
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return diffHours + ' hr ago';
+
+    return created.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  function renderVolunteerSosRequests(requests) {
+    if (!volunteerSosList) return;
+
+    if (!requests.length) {
+      volunteerSosList.innerHTML =
+        '<div class="col-12"><div class="swc-card text-center text-muted py-4">' +
+        '<i class="bi bi-check2-circle fs-3 d-block mb-2" style="color:var(--emerald);"></i>' +
+        'No pending SOS requests right now.' +
+        '</div></div>';
+      return;
+    }
+
+    volunteerSosList.innerHTML = requests.map(function (sos) {
+      const id = escapeHtml(sos._id);
+      const userName = escapeHtml(sos.userName || 'Unknown Warkari');
+      const emergencyType = escapeHtml(sos.emergencyType || 'Emergency SOS');
+      const message = escapeHtml(sos.message || '');
+      const latitude = Number(sos.latitude);
+      const longitude = Number(sos.longitude);
+      const hasLocation = Number.isFinite(latitude) && Number.isFinite(longitude);
+      const locationText = hasLocation
+        ? 'Lat: ' + latitude.toFixed(5) + ', Lng: ' + longitude.toFixed(5)
+        : 'Location unavailable';
+      const mapsUrl = hasLocation
+        ? 'https://www.google.com/maps?q=' + encodeURIComponent(latitude + ',' + longitude)
+        : '#';
+
+      return `
+      <div class="col-lg-6" data-sos-card="${id}"><div class="sos-card h-100">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <span class="sos-tag"><span class="dot"></span>SOS REQUEST</span>
+          <span class="section-sub">${formatSosTime(sos.createdAt)}</span>
+        </div>
+        <div class="d-flex gap-3 align-items-center mb-3">
+          <img src="images/warkari-photo.svg" class="req-photo" alt="${userName}">
+          <div class="flex-grow-1">
+            <div class="req-name">${userName}</div>
+            <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>${escapeHtml(locationText)}</div>
+            <span class="req-pill" style="background:#FEE2E2; color:var(--sos);">${emergencyType}</span>
+            ${message ? `<div class="section-sub mt-1">${message}</div>` : ''}
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-6 col-md-3"><button class="btn-req accept w-100" data-sos-id="${id}"><i class="bi bi-check2-circle"></i>Accept</button></div>
+          <div class="col-6 col-md-3"><a class="btn-req navigate w-100" href="${mapsUrl}" target="_blank" rel="noopener"><i class="bi bi-compass"></i>Navigate</a></div>
+          <div class="col-6 col-md-3"><a href="tel:+919812345600" class="btn-req call w-100"><i class="bi bi-telephone-fill"></i>Call</a></div>
+          <div class="col-6 col-md-3"><button class="btn-req resolve w-100" data-sos-id="${id}"><i class="bi bi-flag"></i>Resolved</button></div>
+        </div>
+      </div></div>`;
+    }).join('');
+  }
+
+  async function loadVolunteerSOS() {
+    if (!volunteerSosList) return;
+
+    console.log('[Volunteer SOS] Loading pending SOS requests from backend...');
+
+    try {
+      const response = await fetch(SOS_API_BASE);
+      if (!response.ok) {
+        throw new Error('SOS request failed with status ' + response.status);
+      }
+
+      const result = await response.json();
+      console.log('[Volunteer SOS] API response:', result);
+
+      if (!result.success || !Array.isArray(result.data)) {
+        throw new Error('Invalid SOS API response format');
+      }
+
+      const pendingRequests = result.data.filter(function (sos) {
+        return sos && sos.status === 'PENDING';
+      });
+
+      console.log('[Volunteer SOS] Pending SOS count:', pendingRequests.length);
+      renderVolunteerSosRequests(pendingRequests);
+    } catch (error) {
+      console.error('[Volunteer SOS] Failed to load SOS requests:', error);
+      volunteerSosList.innerHTML =
+        '<div class="col-12"><div class="swc-card text-center text-danger py-4">' +
+        '<i class="bi bi-exclamation-triangle fs-3 d-block mb-2"></i>' +
+        'Unable to load live SOS requests. Please check backend connection.' +
+        '</div></div>';
+    }
+  }
+
+  async function updateSosStatus(sosId, status) {
+    const response = await fetch(SOS_API_BASE + '/' + encodeURIComponent(sosId) + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Unable to update SOS status');
+    }
+    return result.data;
+  }
+
+  if (volunteerSosList) {
+    console.log('[Volunteer SOS] Existing Volunteer SOS container found:', volunteerSosList);
+    loadVolunteerSOS();
+    setInterval(loadVolunteerSOS, 4000);
+
+    volunteerSosList.addEventListener('click', async function (e) {
+      const acceptBtn = e.target.closest('.btn-req.accept[data-sos-id]');
+      const resolveBtn = e.target.closest('.btn-req.resolve[data-sos-id]');
+
+      if (!acceptBtn && !resolveBtn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const btn = acceptBtn || resolveBtn;
+      const sosId = btn.getAttribute('data-sos-id');
+      if (!sosId) return;
+
+      btn.disabled = true;
+
+      try {
+        if (acceptBtn) {
+          console.log('[Volunteer SOS] Accepting SOS:', sosId);
+
+          const assignResponse = await fetch(SOS_API_BASE + '/' + encodeURIComponent(sosId) + '/assign', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              assignedVolunteerId: VOLUNTEER_ID,
+              assignedVolunteerName: VOLUNTEER_NAME
+            })
+          });
+          const assignResult = await assignResponse.json();
+          if (!assignResponse.ok || !assignResult.success) {
+            throw new Error(assignResult.message || 'Unable to assign SOS request');
+          }
+
+          await updateSosStatus(sosId, 'ACCEPTED');
+        } else {
+          console.log('[Volunteer SOS] Resolving SOS:', sosId);
+          await updateSosStatus(sosId, 'RESOLVED');
+        }
+
+        await loadVolunteerSOS();
+      } catch (error) {
+        console.error('[Volunteer SOS] Action failed:', error);
+        alert(error.message || 'SOS action failed');
+        btn.disabled = false;
+      }
+    });
+  }
+
   /* ---------- Resolve buttons ---------- */
   document.addEventListener('click', function (e) {
     if (e.target.closest('.btn-req.resolve')) {
