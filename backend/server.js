@@ -1,12 +1,15 @@
-dotenv.config();
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import connectDB from "./config/db.js";
-import locationRoutes from "./routes/locationRoutes.js";
+import locationRoutes from "./Routes/locationRoutes.js";
 import sosRoutes from "./Routes/sosRoutes.js";
+import pwdRoutes from "./Routes/pwdRoutes.js";
+import notificationRoutes from "./Routes/notificationRoutes.js";
+
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -18,12 +21,15 @@ const io = new Server(server, {
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
   }
 });
+app.set("io", io);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use("/api/locations", locationRoutes);
 app.use("/api/sos", sosRoutes);
+app.use("/api/pwd-requests", pwdRoutes);
+app.use("/api/notifications", notificationRoutes);
 // Test route
 
 

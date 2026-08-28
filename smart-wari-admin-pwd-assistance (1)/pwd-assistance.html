@@ -155,6 +155,69 @@
 let pwdViewIndex = null;
 let pwdAssignIndex = null;
 let pwdCharts = {};
+const PWD_API_BASE = 'http://localhost:5000/api/pwd-requests';
+
+function pwdApiToRow(req){
+  return {
+    id: req._id,
+    varkariId: req.userId,
+    varkariName: req.userName,
+    assistanceType: req.assistanceType,
+    description: req.description || '',
+    stop: req.locationLabel || `Lat: ${req.latitude}, Lng: ${req.longitude}`,
+    lat: req.latitude,
+    lng: req.longitude,
+    requestTime: req.createdAt,
+    priority: req.priority || 'Medium',
+    volunteer: req.assignedVolunteerName || 'Unassigned',
+    volunteerId: req.assignedVolunteerId || null,
+    status: req.status,
+    emergencyContact: req.emergencyContact || '',
+    escalatedToSOS: req.escalatedToSOS || null
+  };
+}
+
+async function pwdLoadRequests(){
+  try {
+    const response = await fetch(PWD_API_BASE);
+    if (!response.ok) throw new Error(`PWD request failed with status ${response.status}`);
+    const result = await response.json();
+    console.log('ADMIN PWD DATA:', result);
+    if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid PWD API response');
+    PWD_REQUESTS.splice(0, PWD_REQUESTS.length, ...result.data.map(pwdApiToRow));
+  } catch (error) {
+    console.error('Admin PWD API error:', error);
+  }
+  pwdRenderStats();
+  pwdRenderTable();
+  pwdRenderCharts();
+}
+
+async function pwdPatchStatus(id, status){
+  const response = await fetch(`${PWD_API_BASE}/${encodeURIComponent(id)}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) throw new Error(result.message || 'PWD status update failed');
+  return result.data;
+}
+
+async function pwdPatchAssign(id, volunteer, status){
+  const response = await fetch(`${PWD_API_BASE}/${encodeURIComponent(id)}/assign`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      assignedVolunteerId: volunteer.id,
+      assignedVolunteerName: volunteer.name,
+      status
+    })
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) throw new Error(result.message || 'PWD assignment failed');
+  return result.data;
+}
 
 function pwdRenderStats(){
   const total = PWD_REQUESTS.length;
@@ -300,43 +363,58 @@ document.getElementById('pwdAutoAssignBtn').addEventListener('click', () => {
   document.getElementById('pwdAssignDistanceNote').textContent = `Nearest available: ${nearest.v.name} — ${nearest.dist.toFixed(1)} km away.`;
 });
 
-document.getElementById('pwdAssignSave').addEventListener('click', () => {
+document.getElementById('pwdAssignSave').addEventListener('click', async () => {
   if (pwdAssignIndex === null) return;
   const r = PWD_REQUESTS[pwdAssignIndex];
   const volId = document.getElementById('pwdAssignVolunteer').value;
   const vol = PWD_VOLUNTEERS.find(v => v.id === volId);
   const newStatus = document.getElementById('pwdAssignStatus').value;
 
-  r.volunteer = vol ? vol.name : 'Unassigned';
-  r.volunteerId = vol ? vol.id : null;
-  r.status = newStatus;
-  pwdRenderTable();
-  pwdRenderStats();
-
-  const notifyMap = {
-    "Accepted": `Notification: ${r.volunteer} accepted ${r.id}`,
-    "On the Way": `Notification: ${r.volunteer} is on the way for ${r.id}`,
-    "Reached": `Notification: ${r.volunteer} reached the Varkari for ${r.id}`,
-    "Resolved": `Notification: ${r.id} marked resolved`
-  };
-  wariToast(notifyMap[newStatus] || `${r.id} updated — ${newStatus}, ${r.volunteer}`);
+  try {
+    if (vol) {
+      await pwdPatchAssign(r.id, vol, newStatus);
+    } else {
+      await pwdPatchStatus(r.id, newStatus);
+    }
+    await pwdLoadRequests();
+    const notifyMap = {
+      "Accepted": `Notification: ${vol ? vol.name : 'Volunteer'} accepted ${r.id}`,
+      "On the Way": `Notification: ${vol ? vol.name : 'Volunteer'} is on the way for ${r.id}`,
+      "Reached": `Notification: ${vol ? vol.name : 'Volunteer'} reached the Varkari for ${r.id}`,
+      "Resolved": `Notification: ${r.id} marked resolved`
+    };
+    wariToast(notifyMap[newStatus] || `${r.id} updated — ${newStatus}`);
+  } catch (error) {
+    console.error('Admin PWD save error:', error);
+    wariToast(error.message || 'PWD update failed', 'danger');
+  }
 });
 
 /* ---------------- Quick actions from the table ---------------- */
-function pwdMarkResolved(i){
+async function pwdMarkResolved(i){
   const r = PWD_REQUESTS[i];
   if (!window.confirm(`Mark ${r.id} (${r.varkariName}) as Resolved?`)) return;
-  r.status = 'Resolved';
-  pwdRenderTable(); pwdRenderStats(); pwdRenderCharts();
-  wariToast(`Notification: ${r.id} marked resolved`);
+  try {
+    await pwdPatchStatus(r.id, 'Resolved');
+    await pwdLoadRequests();
+    wariToast(`Notification: ${r.id} marked resolved`);
+  } catch (error) {
+    console.error('Admin PWD resolve error:', error);
+    wariToast(error.message || 'PWD resolve failed', 'danger');
+  }
 }
 
-function pwdCancelRequest(i){
+async function pwdCancelRequest(i){
   const r = PWD_REQUESTS[i];
   if (!window.confirm(`Cancel ${r.id} (${r.varkariName})?`)) return;
-  r.status = 'Cancelled';
-  pwdRenderTable(); pwdRenderStats(); pwdRenderCharts();
-  wariToast(`${r.id} cancelled`, 'warning');
+  try {
+    await pwdPatchStatus(r.id, 'Cancelled');
+    await pwdLoadRequests();
+    wariToast(`${r.id} cancelled`, 'warning');
+  } catch (error) {
+    console.error('Admin PWD cancel error:', error);
+    wariToast(error.message || 'PWD cancel failed', 'danger');
+  }
 }
 
 /* ---------------- Demo: simulate a new incoming request (Testing #1) ---------------- */
@@ -387,9 +465,8 @@ function pwdRenderCharts(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  pwdRenderStats();
-  pwdRenderTable();
-  pwdRenderCharts();
+  pwdLoadRequests();
+  setInterval(pwdLoadRequests, 4000);
   ['pwdSearch','pwdTypeFilter','pwdStatusFilter','pwdPriorityFilter'].forEach(id => {
     document.getElementById(id).addEventListener('input', pwdRenderTable);
   });

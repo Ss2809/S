@@ -327,10 +327,45 @@ document.addEventListener('DOMContentLoaded', function () {
       saveRequests(list);
     }
 
+    async function getPwdRequestLocation() {
+      if (window.swcLiveLocation && Number.isFinite(Number(window.swcLiveLocation.lat)) && Number.isFinite(Number(window.swcLiveLocation.lng))) {
+        return window.swcLiveLocation;
+      }
+
+      if (!navigator.geolocation) {
+        throw new Error('Location is required to submit a PWD assistance request');
+      }
+
+      const position = await new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 10000
+        });
+      });
+
+      return {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        label: 'Live GPS location'
+      };
+    }
+
     if (submitBtn) {
-      submitBtn.addEventListener('click', function () {
+      submitBtn.addEventListener('click', async function () {
         if (!selectedType) return;
         const online = navigator.onLine;
+        submitBtn.disabled = true;
+
+        try {
+          currentLocation = await getPwdRequestLocation();
+        } catch (error) {
+          console.error('PWD GPS error:', error);
+          showOfflineNotice(true);
+          submitBtn.disabled = false;
+          return;
+        }
+
         const request = {
           id: genRequestId(),
           varkariId: VARKARI.id,
@@ -345,25 +380,65 @@ document.addEventListener('DOMContentLoaded', function () {
           linkedSOS: false
         };
 
-        const list = getRequests();
-        list.push(request);
-        saveRequests(list);
-        setActiveId(request.id);
-
         if (!online) {
+          const list = getRequests();
+          list.push(request);
+          saveRequests(list);
+          setActiveId(request.id);
           const q = getQueue();
           q.push(request.id);
           saveQueue(q);
           showOfflineNotice(true);
         } else {
-          showOfflineNotice(false);
-          // Simulate sending to the existing backend/notification system
-          setTimeout(function () { simulateLifecycle(request.id); }, 1500);
+          try {
+            const response = await fetch('http://localhost:5000/api/pwd-requests', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: VARKARI.id,
+                userName: VARKARI.name,
+                assistanceType: (TYPE_LABELS[selectedType] || {}).en || selectedType,
+                description: request.description,
+                priority: request.priority === 'Urgent' ? 'High' : request.priority,
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+                locationLabel: currentLocation.label || 'Live GPS location'
+              })
+            });
+            const result = await response.json();
+            console.log('PWD API STATUS:', response.status);
+            console.log('PWD API RESPONSE:', result);
+            if (!response.ok || !result.success) {
+              throw new Error(result.message || 'PWD assistance request failed');
+            }
+
+            request.id = result.data._id;
+            request.status = result.data.status;
+            request.synced = true;
+            request.backendData = result.data;
+            const list = getRequests();
+            list.push(request);
+            saveRequests(list);
+            setActiveId(request.id);
+            showOfflineNotice(false);
+          } catch (error) {
+            console.error('PWD API error:', error);
+            request.synced = false;
+            const list = getRequests();
+            list.push(request);
+            saveRequests(list);
+            setActiveId(request.id);
+            const q = getQueue();
+            q.push(request.id);
+            saveQueue(q);
+            showOfflineNotice(true);
+          }
         }
 
         renderActiveRequest(request.id);
         const modal = bootstrap.Modal.getOrCreateInstance(requestModalEl);
         modal.hide();
+        submitBtn.disabled = false;
       });
     }
 

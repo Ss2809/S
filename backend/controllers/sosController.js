@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import SOS from "../models/SOS.js";
+import { emitNotification } from "./notificationController.js";
 
 const SOS_STATUSES = [
   "PENDING",
@@ -47,6 +48,17 @@ export const createSOS = async (req, res) => {
       latitude: Number(latitude),
       longitude: Number(longitude)
     });
+
+    await emitNotification(req, {
+      audience: "ALL",
+      userId,
+      type: "SOS_CREATED",
+      title: "New SOS request",
+      message: `${userName} raised ${emergencyType}`,
+      relatedType: "SOS",
+      relatedId: sos._id.toString()
+    });
+    req.app.get("io")?.emit("sos:created", sos);
 
     return res.status(201).json({
       success: true,
@@ -128,6 +140,17 @@ export const updateSOSStatus = async (req, res) => {
       });
     }
 
+    await emitNotification(req, {
+      audience: "ALL",
+      userId: sos.userId,
+      type: "SOS_STATUS_CHANGED",
+      title: "SOS status updated",
+      message: `${sos.emergencyType} is now ${sos.status}`,
+      relatedType: "SOS",
+      relatedId: sos._id.toString()
+    });
+    req.app.get("io")?.emit("sos:status", sos);
+
     return res.status(200).json({
       success: true,
       data: sos
@@ -175,6 +198,17 @@ export const assignVolunteer = async (req, res) => {
         message: "SOS request not found"
       });
     }
+
+    await emitNotification(req, {
+      audience: "ALL",
+      userId: sos.userId,
+      type: "SOS_ASSIGNED",
+      title: "SOS volunteer assigned",
+      message: `${assignedVolunteerName} assigned to ${sos.emergencyType}`,
+      relatedType: "SOS",
+      relatedId: sos._id.toString()
+    });
+    req.app.get("io")?.emit("sos:assigned", sos);
 
     return res.status(200).json({
       success: true,

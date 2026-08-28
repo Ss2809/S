@@ -12,6 +12,179 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!document.querySelector('.pwd-card')) return; // only run where PWD Assistance exists
 
   let pwdAvailable = true; // volunteer's PWD-assistance availability (separate from general availability)
+  const PWD_API_BASE = 'http://localhost:5000/api/pwd-requests';
+  const PWD_VOLUNTEER_ID = 'test-volunteer-001';
+  const PWD_VOLUNTEER_NAME = 'Test Volunteer';
+  const pwdRequestGrid = document.getElementById('pwdRequestGrid');
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function formatTime(value) {
+    const date = new Date(value);
+    if (!value || Number.isNaN(date.getTime())) return 'Just now';
+    const mins = Math.max(0, Math.floor((Date.now() - date.getTime()) / 60000));
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return mins + ' min ago';
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + ' hr ago';
+    return date.toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function priorityClass(priority) {
+    return priority === 'High' ? 'high' : 'normal';
+  }
+
+  function statusClass(status) {
+    if (status === 'Resolved') return 'open';
+    if (status === 'Accepted' || status === 'On the Way' || status === 'Reached') return 'busy';
+    return 'new';
+  }
+
+  function mapsUrl(request) {
+    const lat = Number(request.latitude);
+    const lng = Number(request.longitude);
+    return Number.isFinite(lat) && Number.isFinite(lng)
+      ? 'https://www.google.com/maps?q=' + encodeURIComponent(lat + ',' + lng)
+      : 'live-map.html';
+  }
+
+  function renderPwdRequests(requests) {
+    if (!pwdRequestGrid) return;
+    const visible = requests.filter(function (request) {
+      return request.status === 'Pending' || request.assignedVolunteerId === PWD_VOLUNTEER_ID;
+    });
+
+    if (!visible.length) {
+      pwdRequestGrid.innerHTML = '<div class="col-12"><div class="swc-card text-center text-muted py-4">No available PWD assistance requests right now.</div></div>';
+      return;
+    }
+
+    pwdRequestGrid.innerHTML = visible.map(function (request) {
+      const id = escapeHtml(request._id);
+      const assignedToMe = request.assignedVolunteerId === PWD_VOLUNTEER_ID;
+      const accepted = assignedToMe && request.status !== 'Pending';
+      const progressHidden = accepted ? '' : ' d-none';
+      const onWayDisabled = request.status === 'Accepted' ? '' : ' disabled';
+      const reachedDisabled = request.status === 'On the Way' ? '' : ' disabled';
+      const resolvedDisabled = request.status === 'Reached' ? '' : ' disabled';
+
+      return `
+      <div class="col-md-6">
+        <div class="pwd-card h-100" data-pwd-card data-request-id="${id}">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="pwd-tag"><i class="bi bi-universal-access-circle"></i> PWD ASSISTANCE</span>
+            <span class="section-sub">${id.slice(-6)} · ${formatTime(request.createdAt)}</span>
+          </div>
+          <div class="d-flex gap-3 align-items-center mb-2">
+            <img src="images/warkari-photo.svg" class="req-photo" alt="${escapeHtml(request.userName)}">
+            <div class="flex-grow-1">
+              <div class="req-name">${escapeHtml(request.userName)}</div>
+              <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>${escapeHtml(request.locationLabel || ('Lat: ' + request.latitude + ', Lng: ' + request.longitude))}</div>
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="req-pill" style="background:var(--pwd-10); color:var(--pwd);">♿ ${escapeHtml(request.assistanceType)}</span>
+                <span class="priority-pill ${priorityClass(request.priority)}">${escapeHtml(request.priority || 'Medium')} Priority</span>
+                <span class="status-pill ${statusClass(request.status)} pwd-status-badge">${escapeHtml(request.status)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 pwd-action-row">
+            <div class="col-6"><button class="btn-req pwd-accept w-100${accepted ? ' accepted-locked' : ''}" data-pwd-id="${id}" ${accepted ? 'disabled' : ''}><i class="bi bi-check2-circle"></i>${accepted ? ' Accepted' : 'Accept Request'}</button></div>
+            <div class="col-6"><a href="${mapsUrl(request)}" target="_blank" rel="noopener" class="btn-req navigate w-100"><i class="bi bi-geo-alt-fill"></i>View Location</a></div>
+          </div>
+          <div class="pwd-progress-row${progressHidden} row g-2 mt-1">
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-id="${id}" data-pwd-step="onway"${onWayDisabled}><i class="bi bi-signpost-2"></i>On the Way</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-id="${id}" data-pwd-step="reached"${reachedDisabled}><i class="bi bi-geo-alt-fill"></i>Reached</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-id="${id}" data-pwd-step="resolved"${resolvedDisabled}><i class="bi bi-check2-all"></i>Help Provided</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req unable w-100" data-pwd-id="${id}" data-pwd-unable><i class="bi bi-x-circle"></i>Unable to Help</button></div>
+          </div>
+          <div class="pwd-linked-sos-wrap mt-2">
+            <button class="btn-req unable w-100" data-pwd-escalate data-bs-toggle="modal" data-bs-target="#sosModal"><i class="bi bi-exclamation-octagon-fill"></i>Convert to Emergency SOS</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadPwdRequests() {
+    if (!pwdRequestGrid) return;
+    try {
+      const response = await fetch(PWD_API_BASE);
+      if (!response.ok) throw new Error('PWD request failed with status ' + response.status);
+      const result = await response.json();
+      console.log('[Volunteer PWD] API response:', result);
+      if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid PWD API response');
+      renderPwdRequests(result.data);
+    } catch (error) {
+      console.error('[Volunteer PWD] Failed to load requests:', error);
+    }
+  }
+
+  async function assignPwdRequest(id) {
+    const response = await fetch(PWD_API_BASE + '/' + encodeURIComponent(id) + '/assign', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        assignedVolunteerId: PWD_VOLUNTEER_ID,
+        assignedVolunteerName: PWD_VOLUNTEER_NAME,
+        status: 'Accepted'
+      })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || 'PWD accept failed');
+  }
+
+  async function updatePwdStatus(id, status) {
+    const response = await fetch(PWD_API_BASE + '/' + encodeURIComponent(id) + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || 'PWD status update failed');
+  }
+
+  if (pwdRequestGrid) {
+    loadPwdRequests();
+    setInterval(loadPwdRequests, 4000);
+
+    pwdRequestGrid.addEventListener('click', async function (e) {
+      const acceptBtn = e.target.closest('.pwd-accept[data-pwd-id]');
+      const stepBtn = e.target.closest('.pwd-progress[data-pwd-id]');
+      const unableBtn = e.target.closest('[data-pwd-unable][data-pwd-id]');
+      if (!acceptBtn && !stepBtn && !unableBtn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const btn = acceptBtn || stepBtn || unableBtn;
+      const id = btn.getAttribute('data-pwd-id');
+      btn.disabled = true;
+
+      try {
+        if (acceptBtn) await assignPwdRequest(id);
+        if (stepBtn) {
+          const statusMap = { onway: 'On the Way', reached: 'Reached', resolved: 'Resolved' };
+          await updatePwdStatus(id, statusMap[stepBtn.getAttribute('data-pwd-step')]);
+        }
+        if (unableBtn) await updatePwdStatus(id, 'Pending');
+        await loadPwdRequests();
+      } catch (error) {
+        console.error('[Volunteer PWD] Action failed:', error);
+        notify(error.message || 'PWD action failed', '#FEE2E2', 'bi-exclamation-triangle text-danger');
+        btn.disabled = false;
+      }
+    });
+  }
 
   /* ---------- Push a notification into the existing notification UI
      (Recent Notifications card + the notifications offcanvas), reusing

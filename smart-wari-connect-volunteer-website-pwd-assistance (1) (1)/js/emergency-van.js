@@ -10,9 +10,13 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!document.getElementById('emergencyMap')) return; // only run on this page
 
   /* ---------- Demo coordinates (Jejuri Wari stop area) ---------- */
-  const VARKARI_LOC = { lat: 18.2705, lng: 74.1650, label: 'Varkari (WK-7734)' };
+  let VARKARI_LOC = { lat: 18.2705, lng: 74.1650, label: 'Varkari (WK-7734)' };
   const MEDICAL_CENTER = { lat: 18.2655, lng: 74.1585, label: 'Jejuri Primary Health Center' };
   let vanLoc = { lat: 18.2610, lng: 74.1510 }; // van starting point
+  const SOS_API_BASE = 'http://localhost:5000/api/sos';
+  const VOLUNTEER_ID = 'test-volunteer-001';
+  const VOLUNTEER_NAME = 'Test Volunteer';
+  let currentEmergency = null;
 
   /* ---------- Leaflet map ---------- */
   const map = L.map('emergencyMap', { zoomControl: true }).setView([18.2660, 74.1590], 14);
@@ -66,7 +70,59 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Emergency workflow state ---------- */
   const STEPS = ['pending', 'accepted', 'started', 'onway', 'arrived', 'completed'];
   let currentStepIndex = 0;
-  const emergencyId = 'EMG-' + (1043 + Math.floor(Math.random() * 50));
+  let emergencyId = 'EMG-' + (1043 + Math.floor(Math.random() * 50));
+
+  function setCurrentEmergency(sos) {
+    if (!sos) return;
+    currentEmergency = sos;
+    emergencyId = sos._id;
+    VARKARI_LOC = {
+      lat: Number(sos.latitude),
+      lng: Number(sos.longitude),
+      label: sos.userName || sos.userId || 'Warkari'
+    };
+    varkariMarker.setLatLng([VARKARI_LOC.lat, VARKARI_LOC.lng]).bindPopup(VARKARI_LOC.label);
+    routeLine.setLatLngs([[vanLoc.lat, vanLoc.lng], [VARKARI_LOC.lat, VARKARI_LOC.lng]]);
+
+    const card = document.getElementById('newEmergencyCard');
+    card.style.display = '';
+    const nameEl = card.querySelector('.req-name');
+    const typeEl = card.querySelector('.req-pill');
+    const descEl = card.querySelector('[data-i18n="emergencyDescSample"]');
+    const locEl = card.querySelector('[data-i18n="jejuriRoadCrossing"]');
+    if (nameEl) nameEl.textContent = `${sos.userName || 'Warkari'} (${sos.userId || sos._id})`;
+    if (typeEl) typeEl.textContent = sos.emergencyType || 'Emergency SOS';
+    if (descEl) descEl.textContent = sos.message || 'Emergency SOS raised from Warkari dashboard.';
+    if (locEl) locEl.textContent = `Lat: ${Number(sos.latitude).toFixed(5)}, Lng: ${Number(sos.longitude).toFixed(5)}`;
+    document.getElementById('emReqTime').textContent = 'Live SOS';
+    updateEtaLabel();
+  }
+
+  async function loadPendingEmergency() {
+    try {
+      const response = await fetch(SOS_API_BASE);
+      if (!response.ok) throw new Error('SOS request failed with status ' + response.status);
+      const result = await response.json();
+      if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid SOS API response');
+      const pending = result.data.find(sos => sos.status === 'PENDING');
+      if (pending) setCurrentEmergency(pending);
+      else if (!currentEmergency) document.getElementById('newEmergencyCard').style.display = 'none';
+    } catch (error) {
+      console.error('[Emergency Van] Failed to load SOS:', error);
+    }
+  }
+
+  async function patchEmergencyStatus(status) {
+    if (!currentEmergency) return;
+    const response = await fetch(SOS_API_BASE + '/' + encodeURIComponent(currentEmergency._id) + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || 'SOS status update failed');
+    currentEmergency = result.data;
+  }
 
   function renderStepper() {
     document.querySelectorAll('#wfStepper .wf-step').forEach(function (el, i) {
@@ -168,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const newCard = document.getElementById('newEmergencyCard');
   const workflowCard = document.getElementById('workflowCard');
 
-  document.getElementById('acceptEmergencyBtn').addEventListener('click', function () {
+  document.getElementById('acceptEmergencyBtn').addEventListener('click', async function () {
     newCard.style.display = 'none';
     workflowCard.style.display = '';
     currentStepIndex = 1; // ACCEPTED
@@ -177,8 +233,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('vanAssignedEmergency').textContent = emergencyId;
     forceStatus('emergency');
     toast('Emergency accepted — Admin and Varkari notified.', '#DCFCE7', 'bi-check2-circle text-success');
-    // TODO(API): POST /api/volunteer/emergency/{id}/accept
-    // -> assigns volunteer + van, notifies Varkari + Admin
+    if (currentEmergency) {
+      const assignResponse = await fetch(SOS_API_BASE + '/' + encodeURIComponent(currentEmergency._id) + '/assign', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignedVolunteerId: VOLUNTEER_ID, assignedVolunteerName: VOLUNTEER_NAME })
+      });
+      const assignResult = await assignResponse.json();
+      if (!assignResponse.ok || !assignResult.success) throw new Error(assignResult.message || 'SOS assignment failed');
+      await patchEmergencyStatus('ACCEPTED');
+    }
   });
 
   document.getElementById('rejectEmergencyBtn').addEventListener('click', function () {
@@ -203,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
     this.disabled = true;
     startLiveLocation();
     toast('Van is on the way — live GPS started.', '#DBEAFE', 'bi-truck-front text-primary');
-    // TODO(API): notify Varkari + Admin that van is en route
+    patchEmergencyStatus('ON_THE_WAY').catch(error => console.error('[Emergency Van] ON_THE_WAY failed:', error));
   });
 
   document.getElementById('arrivedBtn').addEventListener('click', function () {
@@ -212,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('completeBtn').disabled = false;
     this.disabled = true;
     toast('Volunteer has arrived at the Varkari location.', '#DCFCE7', 'bi-geo-alt-fill text-success');
-    // TODO(API): notify Varkari + Admin of arrival
+    patchEmergencyStatus('REACHED').catch(error => console.error('[Emergency Van] REACHED failed:', error));
   });
 
   document.getElementById('completeBtn').addEventListener('click', function () {
@@ -233,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '<td><span class="status-pill open">COMPLETED</span></td>';
       tbody.prepend(row);
     }
-    // TODO(API): POST /api/volunteer/emergency/{id}/complete -> stop GPS server-side, save history
+    patchEmergencyStatus('RESOLVED').catch(error => console.error('[Emergency Van] RESOLVED failed:', error));
   });
 
   /* ---------- Navigate button ---------- */
@@ -244,4 +308,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   renderStepper();
+  loadPendingEmergency();
+  setInterval(loadPendingEmergency, 4000);
 });
