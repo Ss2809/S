@@ -32,8 +32,8 @@
           </select>
           <select class="form-select" id="emReqStatusFilter" style="max-width:170px;">
             <option value="">All Status</option>
-            <option>PENDING</option><option>ACCEPTED</option><option>ON THE WAY</option>
-            <option>ARRIVED</option><option>COMPLETED</option><option>CANCELLED</option>
+            <option>PENDING</option><option>ASSIGNED</option><option>ACCEPTED</option><option>ON_THE_WAY</option>
+            <option>REACHED</option><option>RESOLVED</option><option>CANCELLED</option>
           </select>
           <a href="emergency-tracking.html" class="btn btn-flag ms-auto"><i class="bi bi-broadcast"></i> Live Tracking</a>
         </div>
@@ -62,8 +62,8 @@
         <div class="mb-3"><label class="form-label small fw-semibold">Emergency Van</label><input class="form-control" id="emReqModalVan" placeholder="e.g. AMB-001"></div>
         <div class="mb-0"><label class="form-label small fw-semibold">Status</label>
           <select class="form-select" id="emReqModalStatus">
-            <option>PENDING</option><option>ACCEPTED</option><option>ON THE WAY</option>
-            <option>ARRIVED</option><option>COMPLETED</option><option>CANCELLED</option>
+            <option>PENDING</option><option>ASSIGNED</option><option>ACCEPTED</option><option>ON_THE_WAY</option>
+            <option>REACHED</option><option>RESOLVED</option><option>CANCELLED</option>
           </select>
         </div>
       </div>
@@ -116,9 +116,9 @@ async function loadAdminSOS(){
 
 function emReqRenderStats(){
   const total = EMERGENCY_REQUESTS.length;
-  const active = EMERGENCY_REQUESTS.filter(r => ["PENDING","ACCEPTED","ON THE WAY"].includes(r.status)).length;
+  const active = EMERGENCY_REQUESTS.filter(r => ["PENDING","ASSIGNED","ACCEPTED","ON_THE_WAY","REACHED"].includes(r.status)).length;
   const pending = EMERGENCY_REQUESTS.filter(r => r.status === "PENDING").length;
-  const completed = EMERGENCY_REQUESTS.filter(r => r.status === "COMPLETED").length;
+  const completed = EMERGENCY_REQUESTS.filter(r => r.status === "RESOLVED").length;
   const cards = [
     ["#FEF2F2","var(--danger)","bi-exclamation-triangle-fill", active, "Active Requests"],
     ["#FFF7ED","var(--warning)","bi-hourglass-split", pending, "Awaiting Assignment"],
@@ -170,14 +170,37 @@ function emReqOpenModal(i){
   new bootstrap.Modal(document.getElementById('emReqModal')).show();
 }
 
-document.getElementById('emReqModalSave').addEventListener('click', () => {
+document.getElementById('emReqModalSave').addEventListener('click', async () => {
   if (emReqModalIndex === null) return;
   const r = EMERGENCY_REQUESTS[emReqModalIndex];
-  r.volunteer = document.getElementById('emReqModalVolunteer').value || 'Unassigned';
-  r.van = document.getElementById('emReqModalVan').value || '—';
-  r.status = document.getElementById('emReqModalStatus').value;
-  emReqRenderTable();
-  wariToast(`${r.id} updated to ${r.status}`);
+  const volunteerName = document.getElementById('emReqModalVolunteer').value.trim();
+  const nextStatus = document.getElementById('emReqModalStatus').value;
+
+  try {
+    if (volunteerName) {
+      const assignResponse = await fetch(`http://localhost:5000/api/sos/${encodeURIComponent(r.id)}/assign`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignedVolunteerId: volunteerName.toLowerCase().replace(/\s+/g, '-'), assignedVolunteerName: volunteerName })
+      });
+      const assignResult = await assignResponse.json();
+      if (!assignResponse.ok || !assignResult.success) throw new Error(assignResult.message || 'SOS assignment failed');
+    }
+
+    const statusResponse = await fetch(`http://localhost:5000/api/sos/${encodeURIComponent(r.id)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: nextStatus })
+    });
+    const statusResult = await statusResponse.json();
+    if (!statusResponse.ok || !statusResult.success) throw new Error(statusResult.message || 'SOS status update failed');
+
+    await loadAdminSOS();
+    wariToast(`${r.id} updated to ${nextStatus}`);
+  } catch (error) {
+    console.error('Admin SOS update error:', error);
+    wariToast(error.message || 'SOS update failed', 'danger');
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {

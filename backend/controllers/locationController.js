@@ -47,6 +47,7 @@ export const updateLocation = async (req, res) => {
       message: "Location updated successfully",
       data: location
     });
+    req.app.get("io")?.emit("location:updated", location);
 
   } catch (error) {
     console.error("Location update error:", error);
