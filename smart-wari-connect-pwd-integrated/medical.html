@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title data-i18n="t_c8c7b193ae">Medical Help | Smart Wari Connect</title>
+<link href="images/logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<nav class="top-navbar d-flex align-items-center px-3 px-lg-4">
+<div class="d-flex align-items-center gap-2 gap-lg-3" style="min-width:0;">
+<button class="btn d-lg-none p-1 border-0" data-bs-target="#sidebarOffcanvas" data-bs-toggle="offcanvas">
+<i class="bi bi-list fs-3"></i>
+</button>
+<a class="d-flex align-items-center gap-2 gap-lg-3" href="index.html" style="min-width:0;">
+<div class="brand-mark"><img alt="Smart Wari Connect logo" src="images/logo.svg"/></div>
+<div class="d-none d-sm-block">
+<div class="brand-text" data-i18n="t_0acd9e0413">Smart Wari Connect</div>
+<div class="brand-sub" data-i18n="t_65e7123eb9">Warkari Assistance Platform</div>
+</div>
+</a>
+</div>
+<div class="flex-grow-1 d-flex justify-content-center px-3">
+<div class="nav-search d-flex align-items-center w-100">
+<i class="bi bi-search text-muted me-2"></i>
+<input data-i18n-placeholder="t_032f700525" placeholder="Search camps, routes, hospitals…" type="text"/>
+</div>
+</div>
+<div class="d-flex align-items-center gap-2 gap-lg-3">
+<div class="weather-chip d-none d-md-flex">
+<i class="bi bi-cloud-rain-fill text-warning"></i>
+<span data-i18n="t_ef7fcf58f4">28°C · Cloudy</span>
+</div><div class="dropdown lang-switch">
+<button aria-expanded="false" class="icon-btn" data-bs-toggle="dropdown" title="Change language">
+<i class="bi bi-translate"></i>
+</button>
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+<li><a class="dropdown-item lang-option" data-lang="en" href="#"><span class="lang-flag">EN</span> English</a></li>
+<li><a class="dropdown-item lang-option" data-lang="hi" href="#"><span class="lang-flag">हि</span> हिंदी (Hindi)</a></li>
+<li><a class="dropdown-item lang-option" data-lang="mr" href="#"><span class="lang-flag">म</span> मराठी (Marathi)</a></li>
+</ul>
+</div>
+<button class="icon-btn" data-bs-target="#notifOffcanvas" data-bs-toggle="offcanvas" data-i18n-title="t_a274f4d467" title="Notifications">
+<i class="bi bi-bell"></i><span class="notif-dot"></span>
+</button>
+<div class="dropdown">
+<button class="btn d-flex align-items-center gap-2 p-0 border-0" data-bs-toggle="dropdown">
+<div class="avatar-ring"><img alt="Profile avatar" src="images/avatar-placeholder.svg"/></div>
+<span class="d-none d-lg-block fw-semibold" data-i18n="t_df6ccb0be4" style="font-size:.88rem;">Sunil Bhosale</span>
+<i class="bi bi-chevron-down d-none d-lg-block text-muted" style="font-size:.7rem;"></i>
+</button>
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+<li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i><span data-i18n="t_e895617497">My Profile</span></a></li>
+<li><a class="dropdown-item" href="digital-id.html"><i class="bi bi-qr-code me-2"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a></li>
+<li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2"></i><span data-i18n="t_f4f70727dc">Settings</span></a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item text-danger" href="logout.html"><i class="bi bi-box-arrow-right me-2"></i><span data-i18n="t_0323de4f66">Logout</span></a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="d-flex">
+<aside class="sidebar d-none d-lg-block">
+<div class="side-label" data-i18n="t_b61541208d">Menu</div>
+<a class="side-link" href="index.html"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="t_2938c7f7e5">Dashboard</span></a>
+<a class="side-link" href="pwd.html"><i class="bi bi-universal-access-circle"></i><span>PWD Assistance</span></a>
+<a class="side-link" href="route.html"><i class="bi bi-signpost-2"></i><span data-i18n="t_1a8d38667f">Today's Route</span></a>
+<a class="side-link" href="live-map.html"><i class="bi bi-geo-alt"></i><span data-i18n="t_828777449f">Live Map</span></a>
+<a class="side-link" href="food.html"><i class="bi bi-egg-fried"></i><span data-i18n="t_bb93eb1298">Food &amp; Annachhatra</span></a>
+<a class="side-link" href="water.html"><i class="bi bi-droplet"></i><span data-i18n="t_5c8826667f">Water Points</span></a>
+<a class="side-link active" href="medical.html"><i class="bi bi-heart-pulse"></i><span data-i18n="t_74e3898442">Medical Help</span></a>
+<a class="side-link" href="missing-persons.html"><i class="bi bi-person-bounding-box"></i><span data-i18n="t_c5ea3a5651">Missing Persons</span></a>
+<a class="side-link" href="lost-found.html"><i class="bi bi-search-heart"></i><span data-i18n="t_1c1ecba6ad">Lost &amp; Found</span></a>
+<a class="side-link" href="ai-assistant.html"><i class="bi bi-robot"></i><span data-i18n="t_3542743c69">AI Assistant</span></a>
+<a class="side-link" href="notifications.html"><i class="bi bi-bell"></i><span data-i18n="t_a274f4d467">Notifications</span></a>
+<a class="side-link" href="digital-id.html"><i class="bi bi-qr-code"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a>
+<div class="side-divider"></div>
+<a class="side-link" href="profile.html"><i class="bi bi-person-circle"></i><span data-i18n="t_e895617497">My Profile</span></a>
+<a class="side-link" href="settings.html"><i class="bi bi-gear"></i><span data-i18n="t_f4f70727dc">Settings</span></a>
+<a class="side-link text-danger" href="logout.html"><i class="bi bi-box-arrow-right"></i><span data-i18n="t_0323de4f66">Logout</span></a>
+</aside>
+<div class="offcanvas offcanvas-start sidebar-offcanvas" id="sidebarOffcanvas">
+<div class="offcanvas-header">
+<div class="d-flex align-items-center gap-2">
+<div class="brand-mark" style="width:36px;height:36px;"><img alt="logo" src="images/logo.svg"/></div>
+<span class="fw-bold" data-i18n="t_0acd9e0413">Smart Wari Connect</span>
+</div>
+<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+<div class="offcanvas-body">
+<a class="side-link" href="index.html"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="t_2938c7f7e5">Dashboard</span></a>
+<a class="side-link" href="pwd.html"><i class="bi bi-universal-access-circle"></i><span>PWD Assistance</span></a>
+<a class="side-link" href="route.html"><i class="bi bi-signpost-2"></i><span data-i18n="t_1a8d38667f">Today's Route</span></a>
+<a class="side-link" href="live-map.html"><i class="bi bi-geo-alt"></i><span data-i18n="t_828777449f">Live Map</span></a>
+<a class="side-link" href="food.html"><i class="bi bi-egg-fried"></i><span data-i18n="t_bb93eb1298">Food &amp; Annachhatra</span></a>
+<a class="side-link" href="water.html"><i class="bi bi-droplet"></i><span data-i18n="t_5c8826667f">Water Points</span></a>
+<a class="side-link active" href="medical.html"><i class="bi bi-heart-pulse"></i><span data-i18n="t_74e3898442">Medical Help</span></a>
+<a class="side-link" href="missing-persons.html"><i class="bi bi-person-bounding-box"></i><span data-i18n="t_c5ea3a5651">Missing Persons</span></a>
+<a class="side-link" href="lost-found.html"><i class="bi bi-search-heart"></i><span data-i18n="t_1c1ecba6ad">Lost &amp; Found</span></a>
+<a class="side-link" href="ai-assistant.html"><i class="bi bi-robot"></i><span data-i18n="t_3542743c69">AI Assistant</span></a>
+<a class="side-link" href="notifications.html"><i class="bi bi-bell"></i><span data-i18n="t_a274f4d467">Notifications</span></a>
+<a class="side-link" href="digital-id.html"><i class="bi bi-qr-code"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a>
+<div class="side-divider"></div>
+<a class="side-link" href="profile.html"><i class="bi bi-person-circle"></i><span data-i18n="t_e895617497">My Profile</span></a>
+<a class="side-link" href="settings.html"><i class="bi bi-gear"></i><span data-i18n="t_f4f70727dc">Settings</span></a>
+<a class="side-link text-danger" href="logout.html"><i class="bi bi-box-arrow-right"></i><span data-i18n="t_0323de4f66">Logout</span></a>
+</div>
+</div>
+<div class="offcanvas offcanvas-end" id="notifOffcanvas" style="width:360px;">
+<div class="offcanvas-header border-bottom">
+<h6 class="offcanvas-title fw-bold" data-i18n="t_9c51867a2b">Live Notifications</h6>
+<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+<div class="offcanvas-body">
+<div class="notif-item">
+<div class="notif-ic" style="background:#FEF3C7;"><i class="bi bi-cloud-rain-fill text-warning"></i></div>
+<div><div class="fw-semibold" data-i18n="t_94f467b97c" style="font-size:.86rem;">Heavy rain expected near Jejuri.</div><div class="notif-time" data-i18n="t_ab79e1353a">10 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:var(--emerald-10);"><i class="bi bi-heart-pulse text-success"></i></div>
+<div><div class="fw-semibold" data-i18n="t_ef6a3ba050" style="font-size:.86rem;">Medical camp shifted 500m east.</div><div class="notif-time" data-i18n="t_25b0075ff7">25 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:var(--saffron-10);"><i class="bi bi-signpost-split text-warning"></i></div>
+<div><div class="fw-semibold" data-i18n="t_ef54c50f85" style="font-size:.86rem;">Road diversion near Saswad.</div><div class="notif-time" data-i18n="t_e13ab76189">40 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:#FEE2E2;"><i class="bi bi-shield-check text-danger"></i></div>
+<div><div class="fw-semibold" data-i18n="t_f7d2fd15f3" style="font-size:.86rem;">Emergency assistance available nearby.</div><div class="notif-time" data-i18n="t_8cd6051e4d">1 hr ago</div></div>
+</div>
+<a class="btn w-100 mt-2" data-i18n="t_93be512243" href="notifications.html" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600; border-radius:10px;">View All Notifications</a>
+</div>
+</div>
+<main class="main-wrap">
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+<div class="d-flex align-items-center gap-3">
+<div class="page-header-icon"><i class="bi bi-heart-pulse"></i></div>
+<div>
+<div class="crumb"><a class="text-white text-decoration-none" data-i18n="t_2938c7f7e5" href="index.html">Dashboard</a><span data-i18n="t_91116ae881">/ Medical Help</span></div>
+<h1 class="devnagri" data-i18n="t_91ef061976">Medical Help &amp; Camps</h1>
+<p data-i18n="t_41f38bbe2e">Find nearby medical camps, ambulances, and free medicine points — help is always close by.</p>
+</div>
+</div>
+</div>
+<div class="row g-3 mb-4">
+<div class="col-md-3 col-6"><div class="swc-card text-center"><div class="stat-num text-danger">5</div><div class="stat-desc" data-i18n="t_468a3676d3">Medical Camps</div></div></div>
+<div class="col-md-3 col-6"><div class="swc-card text-center"><div class="stat-num" style="color:var(--emerald);">4</div><div class="stat-desc" data-i18n="t_3514a697cc">Currently Open</div></div></div>
+<div class="col-md-3 col-6"><div class="swc-card text-center"><div class="stat-num" style="color:#B45309;">1</div><div class="stat-desc" data-i18n="t_6cae643938">Busy Now</div></div></div>
+<div class="col-md-3 col-6"><div class="swc-card text-center"><div class="stat-num text-danger">108</div><div class="stat-desc" data-i18n="t_ee5bde80d4">Ambulance Helpline</div></div></div>
+</div>
+<div class="row g-3 mb-4">
+<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+<div class="d-flex align-items-start gap-3">
+<div class="svc-emoji" style="background:#FEE2E2;">🏥</div>
+<div class="flex-grow-1">
+<div class="d-flex justify-content-between align-items-start">
+<div class="svc-name" data-i18n="t_b2689b9c0a">Wari Medical Camp 3</div>
+<span class="status-pill busy" data-i18n="t_d8a942ef2b">Busy</span>
+</div>
+<div class="svc-meta mb-2" data-i18n="t_e02486d933">0.6 km · General checkup &amp; first aid</div>
+<button class="btn btn-sm w-100" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;"><i class="bi bi-compass me-1"></i><span data-i18n="t_49af5acafa">Navigate</span></button>
+</div>
+</div>
+</div></div><div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+<div class="d-flex align-items-start gap-3">
+<div class="svc-emoji" style="background:#FEE2E2;">🚑</div>
+<div class="flex-grow-1">
+<div class="d-flex justify-content-between align-items-start">
+<div class="svc-name" data-i18n="t_301c3ece51">Zilla Parishad Health Post</div>
+<span class="status-pill open" data-i18n="t_c3bf447eab">Open</span>
+</div>
+<div class="svc-meta mb-2" data-i18n="t_30263b672f">0.9 km · Doctor available · Ambulance on call</div>
+<button class="btn btn-sm w-100" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;"><i class="bi bi-compass me-1"></i><span data-i18n="t_49af5acafa">Navigate</span></button>
+</div>
+</div>
+</div></div><div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+<div class="d-flex align-items-start gap-3">
+<div class="svc-emoji" style="background:#FEE2E2;">💊</div>
+<div class="flex-grow-1">
+<div class="d-flex justify-content-between align-items-start">
+<div class="svc-name" data-i18n="t_b1ad8cd2df">Free Medicine Distribution Camp</div>
+<span class="status-pill open" data-i18n="t_c3bf447eab">Open</span>
+</div>
+<div class="svc-meta mb-2" data-i18n="t_e95fc93979">1.2 km · Common medicines free of cost</div>
+<button class="btn btn-sm w-100" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;"><i class="bi bi-compass me-1"></i><span data-i18n="t_49af5acafa">Navigate</span></button>
+</div>
+</div>
+</div></div><div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+<div class="d-flex align-items-start gap-3">
+<div class="svc-emoji" style="background:#FEE2E2;">🏥</div>
+<div class="flex-grow-1">
+<div class="d-flex justify-content-between align-items-start">
+<div class="svc-name" data-i18n="t_4f4b4e9efd">Red Cross Mobile Clinic</div>
+<span class="status-pill open" data-i18n="t_c3bf447eab">Open</span>
+</div>
+<div class="svc-meta mb-2" data-i18n="t_12ee64361c">1.5 km · Blood pressure &amp; sugar tests</div>
+<button class="btn btn-sm w-100" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;"><i class="bi bi-compass me-1"></i><span data-i18n="t_49af5acafa">Navigate</span></button>
+</div>
+</div>
+</div></div><div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+<div class="d-flex align-items-start gap-3">
+<div class="svc-emoji" style="background:#FEE2E2;">🚑</div>
+<div class="flex-grow-1">
+<div class="d-flex justify-content-between align-items-start">
+<div class="svc-name" data-i18n="t_a12a7eff73">Government Rural Hospital</div>
+<span class="status-pill open" data-i18n="t_c3bf447eab">Open</span>
+</div>
+<div class="svc-meta mb-2" data-i18n="t_75ed0662c7">3.2 km · Full emergency facility</div>
+<button class="btn btn-sm w-100" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;"><i class="bi bi-compass me-1"></i><span data-i18n="t_49af5acafa">Navigate</span></button>
+</div>
+</div>
+</div></div>
+</div>
+<div class="emergency-card">
+<div class="d-flex align-items-center gap-2 mb-3">
+<i class="bi bi-heart-pulse-fill fs-3 text-danger"></i>
+<div><h6 class="fw-bold mb-0" data-i18n="t_fe931eb766">Medical Emergency?</h6><div class="section-sub" data-i18n="t_efa1ad36e3">Don't wait — call for help immediately.</div></div>
+</div>
+<div class="row g-2">
+<div class="col-6 col-md-3"><button class="em-btn primary" data-bs-target="#sosModal" data-bs-toggle="modal"><i class="bi bi-exclamation-octagon-fill fs-5"></i><span data-i18n="t_60d5e1ed30">SOS</span></button></div>
+<div class="col-6 col-md-3"><button class="em-btn secondary"><i class="bi bi-telephone-fill fs-5"></i><span data-i18n="t_51641688b6">Call 108</span></button></div>
+<div class="col-6 col-md-3"><button class="em-btn secondary"><i class="bi bi-hospital fs-5"></i><span data-i18n="t_24694cb3cf">Nearest Hospital</span></button></div>
+<div class="col-6 col-md-3"><button class="em-btn secondary"><i class="bi bi-person-raised-hand fs-5"></i><span data-i18n="t_e437e24ea8">Call Volunteer</span></button></div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal fade" id="sosModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content" style="border-radius:18px; border:0;">
+<div class="modal-body text-center p-4">
+<div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:64px;height:64px;border-radius:50%;background:#FEE2E2;">
+<i class="bi bi-exclamation-octagon-fill fs-2 text-danger"></i>
+</div>
+<h5 class="fw-bold" data-i18n="t_cd94ab53bf">Send Emergency SOS?</h5>
+<p class="text-muted mb-4" style="font-size:.9rem;"><span data-i18n="t_832b8ee15f">Your current location</span><strong data-i18n="t_aee12bf366">(Saswad, near Jejuri Road)</strong><span data-i18n="t_2f35d0ad42">will be shared immediately with the Admin and nearby Volunteer teams so they can reach you as fast as possible.</span></p>
+<div class="d-flex gap-2">
+<button class="btn btn-light flex-grow-1 fw-semibold" data-bs-dismiss="modal" data-i18n="t_ea4788705e" style="border-radius:12px;">Cancel</button>
+<button class="btn flex-grow-1 fw-semibold text-white" data-bs-dismiss="modal" style="background:var(--sos); border-radius:12px;">
+<i class="bi bi-send-fill me-1"></i><span data-i18n="t_d4c2cff01f">Confirm &amp; Send SOS</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<button class="ai-fab" id="aiFabBtn"><i class="bi bi-robot fs-5"></i><span data-i18n="t_ee4ccd2371">Ask Wari AI</span></button>
+<div class="ai-panel" id="aiPanel">
+<div class="ai-panel-head d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center gap-2">
+<i class="bi bi-robot fs-5"></i>
+<div>
+<div class="fw-bold" data-i18n="t_ffcc7d21dd" style="font-size:.9rem;">Wari AI Assistant</div>
+<div data-i18n="t_527ffe3ce5" style="font-size:.7rem; opacity:.85;">Ask me anything about your Wari</div>
+</div>
+</div>
+<button class="btn-close btn-close-white" id="aiCloseBtn"></button>
+</div>
+<div class="p-3">
+<div class="section-sub mb-2" data-i18n="t_0158f3eca4">Suggested questions</div>
+<button class="ai-chip devnagri">आजचा मुक्काम कुठे आहे?</button>
+<button class="ai-chip devnagri">जवळचं अन्नछत्र कुठे आहे?</button>
+<button class="ai-chip devnagri">जवळचं पाणी कुठे मिळेल?</button>
+<button class="ai-chip devnagri" data-i18n="t_3e0cce9192">जवळची medical help कुठे आहे?</button>
+<button class="ai-chip devnagri">आज पाऊस पडेल का?</button>
+<button class="ai-chip devnagri" data-i18n="t_bd0984b7a7">पुढचा route कोणता आहे?</button>
+<div class="d-flex gap-2 mt-2">
+<input class="form-control" data-i18n-placeholder="t_5d235d7c0a" placeholder="Type your question…" style="border-radius:10px; font-size:.85rem;" type="text"/>
+<button class="btn text-white" style="background:var(--emerald); border-radius:10px;"><i class="bi bi-send"></i></button>
+</div>
+</div>
+</div>
+<button class="mobile-sos-fab" data-bs-target="#sosModal" data-bs-toggle="modal"><i class="bi bi-exclamation-octagon-fill"></i></button>
+<nav class="bottom-nav">
+<a class="bn-item" href="index.html"><i class="bi bi-house-door-fill"></i><span data-i18n="t_8cf04a9734">Home</span></a>
+<a class="bn-item" href="live-map.html"><i class="bi bi-map"></i><span data-i18n="t_46f3ea056c">Map</span></a>
+<a class="bn-item" href="food.html"><i class="bi bi-grid"></i><span data-i18n="t_992a0f0542">Services</span></a>
+<a class="bn-item" href="ai-assistant.html" id="mobileAiBtn"><i class="bi bi-robot"></i><span data-i18n="t_0a40e3c91a">AI</span></a>
+<a class="bn-item" href="profile.html"><i class="bi bi-person"></i><span data-i18n="t_cce99c598c">Profile</span></a>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/i18n.js"></script></body>
+</html>

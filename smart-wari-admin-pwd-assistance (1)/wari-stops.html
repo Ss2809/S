@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wari Stops — Smart Wari Connect Admin</title>
+<link rel="icon" href="assets/images/logo.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="wari-stops" data-title="Wari Stops">
+<div class="app-shell">
+  <aside id="sidebar"></aside>
+  <div class="flex-grow-1" style="min-width:0;">
+    <header id="topbar"></header>
+    <main id="page-content">
+
+      <div class="page-header fade-up">
+        <div class="breadcrumb-mini">Admin / Field Services / Wari Stops</div>
+        <h1>Wari Stop Management</h1>
+        <p>The 14 official halts along the route, in order, with assigned volunteers, vans and active emergencies at each.</p>
+      </div>
+
+      <div class="table-surface fade-up">
+        <div class="table-toolbar">
+          <div class="global-search" style="max-width:280px;"><i class="bi bi-search"></i><input type="text" id="stopSearch" placeholder="Search Wari stops…"></div>
+        </div>
+        <div class="table-responsive">
+        <table class="wari-table" id="stopTable">
+          <thead><tr><th>#</th><th>Wari Stop</th><th>Assigned Volunteers</th><th>Emergency Vans</th><th>Active Emergencies</th><th>Actions</th></tr></thead>
+          <tbody id="stopTbody"></tbody>
+        </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/emergency-data.js"></script>
+<script src="assets/js/emergency-common.js"></script>
+<script>
+function stopRenderTable(){
+  const q = (document.getElementById('stopSearch').value || '').toLowerCase();
+  const rows = WARI_STOPS.map((stop, idx) => {
+    const vans = EMERGENCY_VANS.filter(v => v.stop === stop);
+    const active = EMERGENCY_REQUESTS.filter(r => r.stop === stop && !["COMPLETED","CANCELLED"].includes(r.status));
+    return { stop, idx, vans, active };
+  }).filter(({stop}) => !q || stop.toLowerCase().includes(q));
+
+  document.getElementById('stopTbody').innerHTML = rows.map(({stop, idx, vans, active}) => `
+    <tr>
+      <td class="font-data text-muted">${idx + 1}</td>
+      <td class="fw-semibold">${stop}</td>
+      <td>${vans.length ? vans.map(v => v.volunteer).filter(v => v !== 'Unassigned').join(', ') || '<span class="text-muted">None assigned</span>' : '<span class="text-muted">None assigned</span>'}</td>
+      <td>${vans.length ? vans.map(v => `<span class="badge-status ${emStatusBadgeClass(v.status)} me-1">${v.number}</span>`).join('') : '<span class="text-muted">—</span>'}</td>
+      <td>${active.length ? `<span class="badge-status badge-critical">${active.length} active</span>` : '<span class="badge-status badge-active">None</span>'}</td>
+      <td class="table-actions">
+        <a class="btn btn-outline-soft" href="emergency-vans.html" title="Manage vans"><i class="bi bi-truck-front"></i></a>
+        <a class="btn btn-outline-soft" href="volunteers.html" title="Manage volunteers"><i class="bi bi-person-badge"></i></a>
+      </td>
+    </tr>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  stopRenderTable();
+  document.getElementById('stopSearch').addEventListener('input', stopRenderTable);
+});
+</script>
+</body>
+</html>

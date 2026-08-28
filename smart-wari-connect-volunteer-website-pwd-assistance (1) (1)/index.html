@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Smart Wari Connect Volunteer</title>
+<link rel="icon" href="images/volunteer-badge.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="top-navbar d-flex align-items-center px-3 px-lg-4">
+  <div class="d-flex align-items-center gap-2 gap-lg-3" style="min-width:0;">
+    <button class="btn d-lg-none p-1 border-0" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+      <i class="bi bi-list fs-3"></i>
+    </button>
+    <a href="index.html" class="d-flex align-items-center gap-2 gap-lg-3" style="min-width:0;">
+      <div class="brand-mark"><img src="images/logo.svg" alt="Smart Wari Connect logo"><span class="vol-dot"></span></div>
+      <div class="d-none d-sm-block">
+        <div class="brand-text">Smart Wari Connect</div>
+        <div class="brand-sub">Volunteer Panel</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="flex-grow-1 d-flex justify-content-center px-3">
+    <div class="nav-search d-flex align-items-center w-100">
+      <i class="bi bi-search text-muted me-2"></i>
+      <input type="text" placeholder="Search Warkari / Request / Location…">
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 gap-lg-3">
+    <button class="avail-toggle d-none d-md-flex" id="availToggle" title="Tap to change availability">
+      <span class="avail-dot"></span><span class="avail-label">Available for Assistance</span>
+    </button>
+    <button class="icon-btn" title="Notifications" data-bs-toggle="offcanvas" data-bs-target="#notifOffcanvas">
+      <i class="bi bi-bell"></i><span class="notif-dot"></span>
+    </button>
+    <div class="dropdown lang-switch">
+      <button class="btn" data-bs-toggle="dropdown" title="Language / भाषा"><i class="bi bi-translate"></i></button>
+      <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" id="langMenu">
+        <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+        <li><a class="dropdown-item" href="#" data-lang="mr">मराठी</a></li>
+        <li><a class="dropdown-item" href="#" data-lang="hi">हिंदी</a></li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <button class="btn d-flex align-items-center gap-2 p-0 border-0" data-bs-toggle="dropdown">
+        <div class="avatar-ring"><img src="images/avatar-placeholder.svg" alt="Volunteer avatar"></div>
+        <span class="d-none d-lg-block fw-semibold" style="font-size:.88rem;">Anita Kulkarni</span>
+        <i class="bi bi-chevron-down d-none d-lg-block text-muted" style="font-size:.7rem;"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+        <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>My Profile</a></li>
+        <li><a class="dropdown-item" href="my-activity.html"><i class="bi bi-clock-history me-2"></i><span data-i18n="myActivity">My Activity</span></a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="logout.html"><i class="bi bi-box-arrow-right me-2"></i><span data-i18n="logout">Logout</span></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="d-flex">
+  <aside class="sidebar d-none d-lg-block">
+      <div class="side-label">Menu</div>
+      <a href="index.html" class="side-link active"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="dashboard">Dashboard</span></a>
+      <a href="live-map.html" class="side-link"><i class="bi bi-geo-alt"></i><span data-i18n="liveMap">Live Map</span></a>
+      <a href="sos-requests.html" class="side-link"><i class="bi bi-exclamation-octagon-fill"></i><span data-i18n="sosRequests">SOS Requests</span><span class="side-badge">3</span></a>
+      <a href="warkari-assistance.html" class="side-link"><i class="bi bi-hand-thumbs-up"></i><span data-i18n="warkariAssistance">Warkari Assistance</span><span class="side-badge">7</span></a>
+      <a href="pwd-assistance.html" class="side-link"><i class="bi bi-universal-access-circle"></i><span data-i18n="pwdAssistance">PWD Assistance</span><span class="side-badge">4</span></a>
+      <a href="missing-persons.html" class="side-link"><i class="bi bi-person-bounding-box"></i><span data-i18n="missingPersons">Missing Persons</span><span class="side-badge">2</span></a>
+      <a href="emergency-van.html" class="side-link"><i class="bi bi-truck-front-fill"></i><span data-i18n="emergencyVan">Emergency Van</span></a>
+      <a href="medical-requests.html" class="side-link"><i class="bi bi-heart-pulse"></i><span data-i18n="medicalRequests">Medical Requests</span><span class="side-badge">5</span></a>
+      <a href="route-information.html" class="side-link"><i class="bi bi-signpost-2"></i><span data-i18n="routeInformation">Route Information</span></a>
+      <a href="nearby-services.html" class="side-link"><i class="bi bi-shop"></i><span data-i18n="nearbyServices">Nearby Services</span></a>
+      <a href="notifications.html" class="side-link"><i class="bi bi-bell"></i><span data-i18n="notifications">Notifications</span></a>
+      <a href="my-activity.html" class="side-link"><i class="bi bi-clock-history"></i><span data-i18n="myActivity">My Activity</span></a>
+      <div class="side-divider"></div>
+      <a href="profile.html" class="side-link"><i class="bi bi-person-circle"></i><span data-i18n="profile">Profile</span></a>
+      <a href="logout.html" class="side-link text-danger"><i class="bi bi-box-arrow-right"></i><span data-i18n="logout">Logout</span></a>
+  </aside>
+  <div class="offcanvas offcanvas-start sidebar-offcanvas" id="sidebarOffcanvas">
+    <div class="offcanvas-header">
+      <div class="d-flex align-items-center gap-2">
+        <div class="brand-mark" style="width:36px;height:36px;"><img src="images/logo.svg" alt="logo"></div>
+        <span class="fw-bold">Volunteer Panel</span>
+      </div>
+      <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <a href="index.html" class="side-link active"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="dashboard">Dashboard</span></a>
+      <a href="live-map.html" class="side-link"><i class="bi bi-geo-alt"></i><span data-i18n="liveMap">Live Map</span></a>
+      <a href="sos-requests.html" class="side-link"><i class="bi bi-exclamation-octagon-fill"></i><span data-i18n="sosRequests">SOS Requests</span><span class="side-badge">3</span></a>
+      <a href="warkari-assistance.html" class="side-link"><i class="bi bi-hand-thumbs-up"></i><span data-i18n="warkariAssistance">Warkari Assistance</span><span class="side-badge">7</span></a>
+      <a href="pwd-assistance.html" class="side-link"><i class="bi bi-universal-access-circle"></i><span data-i18n="pwdAssistance">PWD Assistance</span><span class="side-badge">4</span></a>
+      <a href="missing-persons.html" class="side-link"><i class="bi bi-person-bounding-box"></i><span data-i18n="missingPersons">Missing Persons</span><span class="side-badge">2</span></a>
+      <a href="emergency-van.html" class="side-link"><i class="bi bi-truck-front-fill"></i><span data-i18n="emergencyVan">Emergency Van</span></a>
+      <a href="medical-requests.html" class="side-link"><i class="bi bi-heart-pulse"></i><span data-i18n="medicalRequests">Medical Requests</span><span class="side-badge">5</span></a>
+      <a href="route-information.html" class="side-link"><i class="bi bi-signpost-2"></i><span data-i18n="routeInformation">Route Information</span></a>
+      <a href="nearby-services.html" class="side-link"><i class="bi bi-shop"></i><span data-i18n="nearbyServices">Nearby Services</span></a>
+      <a href="notifications.html" class="side-link"><i class="bi bi-bell"></i><span data-i18n="notifications">Notifications</span></a>
+      <a href="my-activity.html" class="side-link"><i class="bi bi-clock-history"></i><span data-i18n="myActivity">My Activity</span></a>
+      <div class="side-divider"></div>
+      <a href="profile.html" class="side-link"><i class="bi bi-person-circle"></i><span data-i18n="profile">Profile</span></a>
+      <a href="logout.html" class="side-link text-danger"><i class="bi bi-box-arrow-right"></i><span data-i18n="logout">Logout</span></a>
+    </div>
+  </div>
+
+<div class="offcanvas offcanvas-end" id="notifOffcanvas" style="width:360px;">
+  <div class="offcanvas-header border-bottom">
+    <h6 class="offcanvas-title fw-bold">Live Notifications</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="notif-item"><div class="notif-ic" style="background:#FEE2E2;"><i class="bi bi-exclamation-octagon-fill text-danger"></i></div>
+      <div><div class="fw-semibold" style="font-size:.86rem;">New SOS request 800m away.</div><div class="notif-time">2 min ago</div></div></div>
+    <div class="notif-item"><div class="notif-ic" style="background:var(--saffron-10);"><i class="bi bi-person-bounding-box text-warning"></i></div>
+      <div><div class="fw-semibold" style="font-size:.86rem;">Missing person reported near Saswad.</div><div class="notif-time">15 min ago</div></div></div>
+    <div class="notif-item"><div class="notif-ic" style="background:#DBEAFE;"><i class="bi bi-cloud-rain-fill text-primary"></i></div>
+      <div><div class="fw-semibold" style="font-size:.86rem;">Heavy rainfall expected.</div><div class="notif-time">30 min ago</div></div></div>
+    <div class="notif-item"><div class="notif-ic" style="background:var(--emerald-10);"><i class="bi bi-heart-pulse text-success"></i></div>
+      <div><div class="fw-semibold" style="font-size:.86rem;">Medical camp relocated.</div><div class="notif-time">45 min ago</div></div></div>
+    <div class="notif-item"><div class="notif-ic" style="background:var(--saffron-10);"><i class="bi bi-clipboard-check text-warning"></i></div>
+      <div><div class="fw-semibold" style="font-size:.86rem;">Admin has assigned you a new request.</div><div class="notif-time">1 hr ago</div></div></div>
+    <a href="notifications.html" class="btn w-100 mt-2" style="background:var(--emerald-10); color:var(--emerald); font-weight:600; border-radius:10px;">View All Notifications</a>
+  </div>
+</div>
+
+  <main class="main-wrap">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-3 gap-2">
+      <div>
+        <div class="greet-title devnagri">Namaskar, Volunteer 🙏</div>
+        <div class="greet-sub">Help Warkaris safely complete their Wari journey.</div>
+      </div>
+      <button class="avail-toggle d-md-none" id="availToggleMobile"><span class="avail-dot"></span><span>Available</span></button>
+    </div>
+
+    <div class="vol-banner mb-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-3" style="position:relative;">
+        <div class="d-flex align-items-center gap-3">
+          <img src="images/avatar-placeholder.svg" alt="Volunteer" style="width:54px;height:54px;border-radius:14px; border:2px solid rgba(255,255,255,.5);">
+          <div>
+            <div class="fw-bold fs-5">Anita Kulkarni</div>
+            <div style="font-size:.8rem; opacity:.9;">Volunteer ID: SWCV-2026-1042</div>
+          </div>
+        </div>
+        <span class="status-pill open" style="background:rgba(255,255,255,.22); color:#fff;"><i class="bi bi-circle-fill me-1" style="font-size:.5rem;"></i>Available for Assistance</span>
+      </div>
+      <div class="vol-grid" style="position:relative;">
+        <div class="vol-item"><div class="label"><i class="bi bi-geo-alt-fill me-1"></i>Assigned Area</div><div class="value">Saswad Sector</div></div>
+        <div class="vol-item"><div class="label"><i class="bi bi-people-fill me-1"></i>Today's Assistance</div><div class="value">14 Warkaris</div></div>
+        <div class="vol-item"><div class="label"><i class="bi bi-star-fill me-1"></i>Rating</div><div class="value">4.8 / 5</div></div>
+        <div class="vol-item"><div class="label"><i class="bi bi-telephone-fill me-1"></i>Mobile</div><div class="value">+91 90xxxxx341</div></div>
+        <div class="vol-item"><div class="label"><i class="bi bi-award-fill me-1"></i>Total Assistance</div><div class="value">312 Warkaris</div></div>
+      </div>
+    </div>
+
+    <div class="row g-3 my-1 mb-3">
+      <div class="col-6 col-lg-3"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="stat-icon" style="background:#FEE2E2; color:var(--sos);"><i class="bi bi-exclamation-octagon-fill"></i></div>
+          <span class="status-pill alert">Urgent</span>
+        </div>
+        <div class="stat-num mt-2">3</div><div class="stat-desc">Active SOS Requests</div>
+      </div></div>
+      <div class="col-6 col-lg-3"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="stat-icon" style="background:var(--saffron-10); color:var(--deep-orange);"><i class="bi bi-person-bounding-box"></i></div>
+          <span class="status-pill busy">Ongoing</span>
+        </div>
+        <div class="stat-num mt-2">2</div><div class="stat-desc">Missing Persons</div>
+      </div></div>
+      <div class="col-6 col-lg-3"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="stat-icon" style="background:#DBEAFE; color:#2563EB;"><i class="bi bi-heart-pulse"></i></div>
+          <span class="status-pill new">New</span>
+        </div>
+        <div class="stat-num mt-2">5</div><div class="stat-desc">Medical Requests</div>
+      </div></div>
+      <div class="col-6 col-lg-3"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="stat-icon" style="background:var(--emerald-10); color:var(--emerald);"><i class="bi bi-hourglass-split"></i></div>
+          <span class="status-pill open">Queue</span>
+        </div>
+        <div class="stat-num mt-2">7</div><div class="stat-desc">Pending Assistance</div>
+      </div></div>
+      <div class="col-6 col-lg-3"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="stat-icon" style="background:var(--pwd-10); color:var(--pwd);"><i class="bi bi-universal-access-circle"></i></div>
+          <span class="status-pill new">Queue</span>
+        </div>
+        <div class="stat-num mt-2">4</div><div class="stat-desc">♿ PWD Assistance Requests</div>
+      </div></div>
+    </div>
+
+    <!-- Emergency overview: current stop, availability, van, active + completed emergencies -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="section-title mb-0"><i class="bi bi-truck-front-fill me-2" style="color:var(--sos);"></i>Emergency Overview</h6>
+      <a href="emergency-van.html" class="section-sub">Open Emergency Van</a>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg"><div class="swc-card text-center h-100">
+        <div class="stat-desc mb-1">Current Wari Stop</div><div class="fw-bold" style="font-size:1.05rem;">Jejuri</div>
+      </div></div>
+      <div class="col-6 col-lg"><div class="swc-card text-center h-100">
+        <div class="stat-desc mb-1">Volunteer Status</div>
+        <div class="fw-bold" style="font-size:1.05rem;color:var(--emerald);"><span class="legend-dot" style="background:var(--emerald);"></span>AVAILABLE</div>
+      </div></div>
+      <div class="col-6 col-lg"><div class="swc-card text-center h-100">
+        <div class="stat-desc mb-1">Emergency Van</div><div class="fw-bold" style="font-size:1.05rem;">AMB-004</div>
+      </div></div>
+      <div class="col-6 col-lg"><div class="swc-card text-center h-100">
+        <div class="stat-desc mb-1">Active Emergency</div><div class="fw-bold" style="font-size:1.05rem;color:var(--sos);">0</div>
+      </div></div>
+      <div class="col-6 col-lg"><div class="swc-card text-center h-100">
+        <div class="stat-desc mb-1">Completed Emergencies</div><div class="fw-bold" style="font-size:1.05rem;color:#2563EB;">18</div>
+      </div></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="section-title mb-0"><i class="bi bi-exclamation-octagon-fill text-danger me-2"></i>Live SOS Requests</h6>
+          <a href="sos-requests.html" class="section-sub">View all</a>
+        </div>
+        <div class="sos-card mb-3">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <span class="sos-tag"><span class="dot"></span>SOS REQUEST</span>
+        <span class="section-sub">2 min ago</span>
+      </div>
+      <div class="d-flex gap-3 align-items-center mb-3">
+        <img src="images/warkari-photo.svg" class="req-photo" alt="Rahul Patil">
+        <div class="flex-grow-1">
+          <div class="req-name">Rahul Patil</div>
+          <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>Near Saswad Route · <span class="fw-semibold text-danger">1.2 KM</span></div>
+          <span class="req-pill" style="background:#FEE2E2; color:var(--sos);">Medical Assistance</span>
+        </div>
+      </div>
+      <div class="row g-2">
+        <div class="col-6 col-md-3"><button class="btn-req accept w-100"><i class="bi bi-check2-circle"></i>Accept</button></div>
+        <div class="col-6 col-md-3"><button class="btn-req navigate w-100"><i class="bi bi-compass"></i>Navigate</button></div>
+        <div class="col-6 col-md-3"><a href="tel:+919812345601" class="btn-req call w-100"><i class="bi bi-telephone-fill"></i>Call</a></div>
+        <div class="col-6 col-md-3"><button class="btn-req resolve w-100"><i class="bi bi-flag"></i>Resolved</button></div>
+      </div>
+    </div>
+        <div class="sos-card mb-3">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <span class="sos-tag"><span class="dot"></span>SOS REQUEST</span>
+        <span class="section-sub">9 min ago</span>
+      </div>
+      <div class="d-flex gap-3 align-items-center mb-3">
+        <img src="images/warkari-photo.svg" class="req-photo" alt="Meera Deshmukh">
+        <div class="flex-grow-1">
+          <div class="req-name">Meera Deshmukh</div>
+          <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>Jejuri Road Crossing · <span class="fw-semibold text-danger">2.6 KM</span></div>
+          <span class="req-pill" style="background:#FEE2E2; color:var(--sos);">Lost & Disoriented</span>
+        </div>
+      </div>
+      <div class="row g-2">
+        <div class="col-6 col-md-3"><button class="btn-req accept w-100"><i class="bi bi-check2-circle"></i>Accept</button></div>
+        <div class="col-6 col-md-3"><button class="btn-req navigate w-100"><i class="bi bi-compass"></i>Navigate</button></div>
+        <div class="col-6 col-md-3"><a href="tel:+919812345602" class="btn-req call w-100"><i class="bi bi-telephone-fill"></i>Call</a></div>
+        <div class="col-6 col-md-3"><button class="btn-req resolve w-100"><i class="bi bi-flag"></i>Resolved</button></div>
+      </div>
+    </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
+          <h6 class="section-title mb-0"><i class="bi bi-person-check-fill text-success me-2"></i>Active Assistance</h6>
+          <span class="section-sub">Requests you've accepted</span>
+        </div>
+        <div id="activeAssistanceList">
+          <div class="active-card mb-2">
+            <i class="bi bi-person-check-fill fs-4" style="color:var(--emerald);"></i>
+            <div class="flex-grow-1"><div class="fw-semibold" style="font-size:.88rem;">Ganesh Shinde — Water Required</div><div class="section-sub">Accepted 12 min ago · Near Saswad</div></div>
+            <button class="btn-req resolve">Mark Resolved</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="van-card mb-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="van-number">AMB-004</div>
+              <div class="van-type">Emergency Medical Van</div>
+            </div>
+            <span class="gps-badge off"><span class="dot"></span>GPS OFF</span>
+          </div>
+          <div class="van-grid">
+            <div><div class="label">Status</div><div class="value">AVAILABLE</div></div>
+            <div><div class="label">Assigned Emergency</div><div class="value">—</div></div>
+          </div>
+          <a href="emergency-van.html" class="btn w-100 mt-3" style="background:rgba(255,255,255,.12); color:#fff; font-weight:600; border-radius:10px; position:relative;">Open Emergency Van</a>
+        </div>
+        <div class="swc-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="section-title mb-0">Assigned Route</h6>
+            <a href="route-information.html" class="section-sub">Details</a>
+          </div>
+          <div class="route-timeline" style="padding-top:.2rem;">
+            <div class="tl-stop done"><div class="tl-line"></div><div class="tl-dot"></div><div class="tl-name">Alandi</div></div>
+            <div class="tl-stop done"><div class="tl-line"></div><div class="tl-dot"></div><div class="tl-name">Pune</div></div>
+            <div class="tl-stop current"><div class="tl-line"></div><div class="tl-dot"></div><div class="tl-name">Saswad</div><span class="tl-badge">Assigned</span></div>
+            <div class="tl-stop"><div class="tl-line"></div><div class="tl-dot"></div><div class="tl-name">Jejuri</div></div>
+            <div class="tl-stop"><div class="tl-line"></div><div class="tl-dot"></div><div class="tl-name">Lonand</div></div>
+          </div>
+        </div>
+
+        <div class="swc-card mb-4">
+          <h6 class="section-title mb-3"><i class="bi bi-hand-thumbs-up text-warning me-2"></i>Assistance Requests</h6>
+          <div class="svc-card mb-2"><div class="svc-emoji">🧭</div><div class="flex-grow-1"><div class="svc-name">Route Guidance</div><div class="svc-meta">Sunita More · 0.5 km</div></div><span class="status-pill new">New</span></div>
+          <div class="svc-card mb-2"><div class="svc-emoji">🚰</div><div class="flex-grow-1"><div class="svc-name">Water Required</div><div class="svc-meta">Baban Kale · 0.8 km</div></div><span class="status-pill new">New</span></div>
+          <div class="svc-card"><div class="svc-emoji">🍛</div><div class="flex-grow-1"><div class="svc-name">Food Required</div><div class="svc-meta">Lata Jadhav · 1.1 km</div></div><span class="status-pill new">New</span></div>
+          <a href="warkari-assistance.html" class="btn w-100 mt-3" style="background:var(--emerald-10); color:var(--emerald); font-weight:600; border-radius:10px;">View All Requests</a>
+        </div>
+
+        <div class="swc-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="section-title mb-0">Recent Notifications</h6>
+            <a href="notifications.html" class="section-sub">See all</a>
+          </div>
+          <div class="notif-item"><div class="notif-ic" style="background:#FEE2E2;"><i class="bi bi-exclamation-octagon-fill text-danger"></i></div>
+            <div><div class="fw-semibold" style="font-size:.84rem;">New SOS request 800m away.</div><div class="notif-time">2 min ago</div></div></div>
+          <div class="notif-item"><div class="notif-ic" style="background:var(--saffron-10);"><i class="bi bi-person-bounding-box text-warning"></i></div>
+            <div><div class="fw-semibold" style="font-size:.84rem;">Missing person reported near Saswad.</div><div class="notif-time">15 min ago</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ♿ PWD Assistance (separate from SOS) ==================== -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 mt-2 gap-2">
+      <h6 class="section-title mb-0">♿ <span data-i18n="pwdAssistance">PWD Assistance</span></h6>
+      <div class="d-flex flex-wrap align-items-center gap-2 gap-lg-3">
+        <button class="pwd-avail-toggle" id="pwdAvailToggle" title="Toggle availability for PWD assistance requests">
+          <span class="avail-dot"></span><span class="pwd-avail-label">Available for PWD Assistance</span>
+        </button>
+        <a href="pwd-assistance.html" class="section-sub">View all</a>
+      </div>
+    </div>
+    <div class="row g-3 mb-2" id="pwdRequestRow">
+
+      <div class="col-lg-6">
+        <div class="pwd-card mb-3" data-pwd-card data-request-id="PWD-2031">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="pwd-tag"><i class="bi bi-universal-access-circle"></i> PWD ASSISTANCE</span>
+            <span class="section-sub">PWD-2031 · 3 min ago</span>
+          </div>
+          <div class="d-flex gap-3 align-items-center mb-2">
+            <img src="images/warkari-photo.svg" class="req-photo" alt="Rahul Patil">
+            <div class="flex-grow-1">
+              <div class="req-name">Rahul Patil</div>
+              <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>Near Saswad Bus Stand · <span class="fw-semibold">350 m</span></div>
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="req-pill" style="background:var(--pwd-10); color:var(--pwd);">🦽 Wheelchair Assistance</span>
+                <span class="priority-pill high">🟠 High Priority</span>
+                <span class="status-pill new pwd-status-badge">Pending</span>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 pwd-action-row">
+            <div class="col-6"><button class="btn-req pwd-accept w-100"><i class="bi bi-check2-circle"></i>Accept Request</button></div>
+            <div class="col-6"><a href="live-map.html" class="btn-req navigate w-100"><i class="bi bi-geo-alt-fill"></i>View Location</a></div>
+          </div>
+          <div class="pwd-progress-row d-none row g-2 mt-1">
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="onway"><i class="bi bi-signpost-2"></i>On the Way</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="reached" disabled><i class="bi bi-geo-alt-fill"></i>Reached</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="resolved" disabled><i class="bi bi-check2-all"></i>Help Provided</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req unable w-100" data-pwd-unable><i class="bi bi-x-circle"></i>Unable to Help</button></div>
+          </div>
+          <div class="pwd-linked-sos-wrap mt-2">
+            <button class="btn-req unable w-100" data-pwd-escalate data-bs-toggle="modal" data-bs-target="#sosModal"><i class="bi bi-exclamation-octagon-fill"></i>Convert to Emergency SOS</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="pwd-card mb-3" data-pwd-card data-request-id="PWD-2032">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="pwd-tag"><i class="bi bi-universal-access-circle"></i> PWD ASSISTANCE</span>
+            <span class="section-sub">PWD-2032 · 8 min ago</span>
+          </div>
+          <div class="d-flex gap-3 align-items-center mb-2">
+            <img src="images/warkari-photo.svg" class="req-photo" alt="Sunita More">
+            <div class="flex-grow-1">
+              <div class="req-name">Sunita More</div>
+              <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>Jejuri Road Crossing · <span class="fw-semibold">600 m</span></div>
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="req-pill" style="background:var(--pwd-10); color:var(--pwd);">🦯 Visual Impairment Guidance</span>
+                <span class="priority-pill normal">🟢 Normal Priority</span>
+                <span class="status-pill new pwd-status-badge">Pending</span>
+              </div>
+            </div>
+          </div>
+          <div class="row g-2 pwd-action-row">
+            <div class="col-6"><button class="btn-req pwd-accept w-100"><i class="bi bi-check2-circle"></i>Accept Request</button></div>
+            <div class="col-6"><a href="live-map.html" class="btn-req navigate w-100"><i class="bi bi-geo-alt-fill"></i>View Location</a></div>
+          </div>
+          <div class="pwd-progress-row d-none row g-2 mt-1">
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="onway"><i class="bi bi-signpost-2"></i>On the Way</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="reached" disabled><i class="bi bi-geo-alt-fill"></i>Reached</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req pwd-progress w-100" data-pwd-step="resolved" disabled><i class="bi bi-check2-all"></i>Help Provided</button></div>
+            <div class="col-6 col-md-3"><button class="btn-req unable w-100" data-pwd-unable><i class="bi bi-x-circle"></i>Unable to Help</button></div>
+          </div>
+          <div class="pwd-linked-sos-wrap mt-2">
+            <button class="btn-req unable w-100" data-pwd-escalate data-bs-toggle="modal" data-bs-target="#sosModal"><i class="bi bi-exclamation-octagon-fill"></i>Convert to Emergency SOS</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="section-title mb-0"><i class="bi bi-person-check-fill me-2" style="color:var(--pwd);"></i>Active PWD Assistance</h6>
+      <span class="section-sub">Requests you've accepted</span>
+    </div>
+    <div id="activePwdList" class="mb-4">
+      <div class="text-muted small">No active PWD assistance right now.</div>
+    </div>
+
+    <div class="text-center text-muted small mt-4 mb-2">
+      <i class="bi bi-shield-check me-1"></i>Smart Wari Connect Volunteer · Thank you for keeping every Warkari safe 🧡
+    </div>
+
+  </main>
+</div>
+<div class="modal fade" id="sosModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px; border:0;">
+      <div class="modal-body text-center p-4">
+        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:64px;height:64px;border-radius:50%;background:#FEE2E2;">
+          <i class="bi bi-exclamation-octagon-fill fs-2 text-danger"></i>
+        </div>
+        <h5 class="fw-bold">Raise Emergency SOS?</h5>
+        <p class="text-muted mb-4" style="font-size:.9rem;">This will alert Admin and nearby volunteers with your live location for immediate backup.</p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-light flex-grow-1 fw-semibold" data-bs-dismiss="modal" style="border-radius:12px;">Cancel</button>
+          <button class="btn flex-grow-1 fw-semibold text-white" style="background:var(--sos); border-radius:12px;" data-bs-dismiss="modal">
+            <i class="bi bi-send-fill me-1"></i>Confirm &amp; Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="mobile-sos-fab" data-bs-toggle="modal" data-bs-target="#sosModal"><i class="bi bi-exclamation-octagon-fill"></i></button>
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-item active"><i class="bi bi-house-door-fill"></i>Home</a>
+  <a href="live-map.html" class="bn-item"><i class="bi bi-map"></i>Map</a>
+  <a href="sos-requests.html" class="bn-item"><span class="bn-badge">3</span><i class="bi bi-exclamation-octagon-fill"></i>SOS</a>
+  <a href="warkari-assistance.html" class="bn-item"><span class="bn-badge">7</span><i class="bi bi-clipboard-check"></i>Requests</a>
+  <a href="profile.html" class="bn-item"><i class="bi bi-person"></i><span data-i18n="profile">Profile</span></a>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/pwd-assistance.js"></script>
+</body>
+</html>

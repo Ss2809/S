@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PWD Assistance | Smart Wari Connect</title>
+<link href="images/logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<nav class="top-navbar d-flex align-items-center px-3 px-lg-4">
+<div class="d-flex align-items-center gap-2 gap-lg-3" style="min-width:0;">
+<button class="btn d-lg-none p-1 border-0" data-bs-target="#sidebarOffcanvas" data-bs-toggle="offcanvas">
+<i class="bi bi-list fs-3"></i>
+</button>
+<a class="d-flex align-items-center gap-2 gap-lg-3" href="index.html" style="min-width:0;">
+<div class="brand-mark"><img alt="Smart Wari Connect logo" src="images/logo.svg"/></div>
+<div class="d-none d-sm-block">
+<div class="brand-text" data-i18n="t_0acd9e0413">Smart Wari Connect</div>
+<div class="brand-sub" data-i18n="t_65e7123eb9">Warkari Assistance Platform</div>
+</div>
+</a>
+</div>
+<div class="flex-grow-1 d-flex justify-content-center px-3">
+<div class="nav-search d-flex align-items-center w-100">
+<i class="bi bi-search text-muted me-2"></i>
+<input data-i18n-placeholder="t_032f700525" placeholder="Search camps, routes, hospitals…" type="text"/>
+</div>
+</div>
+<div class="d-flex align-items-center gap-2 gap-lg-3">
+<div class="weather-chip d-none d-md-flex">
+<i class="bi bi-cloud-rain-fill text-warning"></i>
+<span data-i18n="t_ef7fcf58f4">28°C · Cloudy</span>
+</div><div class="dropdown lang-switch">
+<button aria-expanded="false" class="icon-btn" data-bs-toggle="dropdown" title="Change language">
+<i class="bi bi-translate"></i>
+</button>
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+<li><a class="dropdown-item lang-option" data-lang="en" href="#"><span class="lang-flag">EN</span> English</a></li>
+<li><a class="dropdown-item lang-option" data-lang="hi" href="#"><span class="lang-flag">हि</span> हिंदी (Hindi)</a></li>
+<li><a class="dropdown-item lang-option" data-lang="mr" href="#"><span class="lang-flag">म</span> मराठी (Marathi)</a></li>
+</ul>
+</div>
+<button class="icon-btn" data-bs-target="#notifOffcanvas" data-bs-toggle="offcanvas" data-i18n-title="t_a274f4d467" title="Notifications">
+<i class="bi bi-bell"></i><span class="notif-dot"></span>
+</button>
+<div class="dropdown">
+<button class="btn d-flex align-items-center gap-2 p-0 border-0" data-bs-toggle="dropdown">
+<div class="avatar-ring"><img alt="Profile avatar" src="images/avatar-placeholder.svg"/></div>
+<span class="d-none d-lg-block fw-semibold" data-i18n="t_df6ccb0be4" style="font-size:.88rem;">Sunil Bhosale</span>
+<i class="bi bi-chevron-down d-none d-lg-block text-muted" style="font-size:.7rem;"></i>
+</button>
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+<li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i><span data-i18n="t_e895617497">My Profile</span></a></li>
+<li><a class="dropdown-item" href="digital-id.html"><i class="bi bi-qr-code me-2"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a></li>
+<li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2"></i><span data-i18n="t_f4f70727dc">Settings</span></a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item text-danger" href="logout.html"><i class="bi bi-box-arrow-right me-2"></i><span data-i18n="t_0323de4f66">Logout</span></a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="d-flex">
+<aside class="sidebar d-none d-lg-block">
+<div class="side-label" data-i18n="t_b61541208d">Menu</div>
+<a class="side-link" href="index.html"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="t_2938c7f7e5">Dashboard</span></a>
+<a class="side-link active" href="pwd.html"><i class="bi bi-universal-access-circle"></i><span>PWD Assistance</span></a>
+<a class="side-link" href="route.html"><i class="bi bi-signpost-2"></i><span data-i18n="t_1a8d38667f">Today's Route</span></a>
+<a class="side-link" href="live-map.html"><i class="bi bi-geo-alt"></i><span data-i18n="t_828777449f">Live Map</span></a>
+<a class="side-link" href="food.html"><i class="bi bi-egg-fried"></i><span data-i18n="t_bb93eb1298">Food &amp; Annachhatra</span></a>
+<a class="side-link" href="water.html"><i class="bi bi-droplet"></i><span data-i18n="t_5c8826667f">Water Points</span></a>
+<a class="side-link" href="medical.html"><i class="bi bi-heart-pulse"></i><span data-i18n="t_74e3898442">Medical Help</span></a>
+<a class="side-link" href="missing-persons.html"><i class="bi bi-person-bounding-box"></i><span data-i18n="t_c5ea3a5651">Missing Persons</span></a>
+<a class="side-link" href="lost-found.html"><i class="bi bi-search-heart"></i><span data-i18n="t_1c1ecba6ad">Lost &amp; Found</span></a>
+<a class="side-link" href="ai-assistant.html"><i class="bi bi-robot"></i><span data-i18n="t_3542743c69">AI Assistant</span></a>
+<a class="side-link" href="notifications.html"><i class="bi bi-bell"></i><span data-i18n="t_a274f4d467">Notifications</span></a>
+<a class="side-link" href="digital-id.html"><i class="bi bi-qr-code"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a>
+<div class="side-divider"></div>
+<a class="side-link" href="profile.html"><i class="bi bi-person-circle"></i><span data-i18n="t_e895617497">My Profile</span></a>
+<a class="side-link" href="settings.html"><i class="bi bi-gear"></i><span data-i18n="t_f4f70727dc">Settings</span></a>
+<a class="side-link text-danger" href="logout.html"><i class="bi bi-box-arrow-right"></i><span data-i18n="t_0323de4f66">Logout</span></a>
+</aside>
+<div class="offcanvas offcanvas-start sidebar-offcanvas" id="sidebarOffcanvas">
+<div class="offcanvas-header">
+<div class="d-flex align-items-center gap-2">
+<div class="brand-mark" style="width:36px;height:36px;"><img alt="logo" src="images/logo.svg"/></div>
+<span class="fw-bold" data-i18n="t_0acd9e0413">Smart Wari Connect</span>
+</div>
+<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+<div class="offcanvas-body">
+<a class="side-link" href="index.html"><i class="bi bi-grid-1x2-fill"></i><span data-i18n="t_2938c7f7e5">Dashboard</span></a>
+<a class="side-link active" href="pwd.html"><i class="bi bi-universal-access-circle"></i><span>PWD Assistance</span></a>
+<a class="side-link" href="route.html"><i class="bi bi-signpost-2"></i><span data-i18n="t_1a8d38667f">Today's Route</span></a>
+<a class="side-link" href="live-map.html"><i class="bi bi-geo-alt"></i><span data-i18n="t_828777449f">Live Map</span></a>
+<a class="side-link" href="food.html"><i class="bi bi-egg-fried"></i><span data-i18n="t_bb93eb1298">Food &amp; Annachhatra</span></a>
+<a class="side-link" href="water.html"><i class="bi bi-droplet"></i><span data-i18n="t_5c8826667f">Water Points</span></a>
+<a class="side-link" href="medical.html"><i class="bi bi-heart-pulse"></i><span data-i18n="t_74e3898442">Medical Help</span></a>
+<a class="side-link" href="missing-persons.html"><i class="bi bi-person-bounding-box"></i><span data-i18n="t_c5ea3a5651">Missing Persons</span></a>
+<a class="side-link" href="lost-found.html"><i class="bi bi-search-heart"></i><span data-i18n="t_1c1ecba6ad">Lost &amp; Found</span></a>
+<a class="side-link" href="ai-assistant.html"><i class="bi bi-robot"></i><span data-i18n="t_3542743c69">AI Assistant</span></a>
+<a class="side-link" href="notifications.html"><i class="bi bi-bell"></i><span data-i18n="t_a274f4d467">Notifications</span></a>
+<a class="side-link" href="digital-id.html"><i class="bi bi-qr-code"></i><span data-i18n="t_1bc3a29bb7">Digital Warkari ID</span></a>
+<div class="side-divider"></div>
+<a class="side-link" href="profile.html"><i class="bi bi-person-circle"></i><span data-i18n="t_e895617497">My Profile</span></a>
+<a class="side-link" href="settings.html"><i class="bi bi-gear"></i><span data-i18n="t_f4f70727dc">Settings</span></a>
+<a class="side-link text-danger" href="logout.html"><i class="bi bi-box-arrow-right"></i><span data-i18n="t_0323de4f66">Logout</span></a>
+</div>
+</div>
+<div class="offcanvas offcanvas-end" id="notifOffcanvas" style="width:360px;">
+<div class="offcanvas-header border-bottom">
+<h6 class="offcanvas-title fw-bold" data-i18n="t_9c51867a2b">Live Notifications</h6>
+<button class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+<div class="offcanvas-body">
+<div class="notif-item">
+<div class="notif-ic" style="background:#FEF3C7;"><i class="bi bi-cloud-rain-fill text-warning"></i></div>
+<div><div class="fw-semibold" data-i18n="t_94f467b97c" style="font-size:.86rem;">Heavy rain expected near Jejuri.</div><div class="notif-time" data-i18n="t_ab79e1353a">10 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:var(--emerald-10);"><i class="bi bi-heart-pulse text-success"></i></div>
+<div><div class="fw-semibold" data-i18n="t_ef6a3ba050" style="font-size:.86rem;">Medical camp shifted 500m east.</div><div class="notif-time" data-i18n="t_25b0075ff7">25 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:var(--saffron-10);"><i class="bi bi-signpost-split text-warning"></i></div>
+<div><div class="fw-semibold" data-i18n="t_ef54c50f85" style="font-size:.86rem;">Road diversion near Saswad.</div><div class="notif-time" data-i18n="t_e13ab76189">40 min ago</div></div>
+</div>
+<div class="notif-item">
+<div class="notif-ic" style="background:#FEE2E2;"><i class="bi bi-shield-check text-danger"></i></div>
+<div><div class="fw-semibold" data-i18n="t_f7d2fd15f3" style="font-size:.86rem;">Emergency assistance available nearby.</div><div class="notif-time" data-i18n="t_8cd6051e4d">1 hr ago</div></div>
+</div>
+<a class="btn w-100 mt-2" data-i18n="t_93be512243" href="notifications.html" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600; border-radius:10px;">View All Notifications</a>
+</div>
+</div>
+<main class="main-wrap">
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+<div class="d-flex align-items-center gap-3">
+<div class="page-header-icon"><i class="bi bi-universal-access-circle"></i></div>
+<div>
+<div class="crumb"><a class="text-white text-decoration-none" data-i18n="t_2938c7f7e5" href="index.html">Dashboard</a><span>/ PWD Assistance</span></div>
+<h1 class="devnagri">♿ PWD Assistance</h1>
+<p>Wheelchair, walking, visual, hearing, elderly or medical assistance — request help anytime during the Wari. Completely optional for Varkaris who don't need it.</p>
+</div>
+</div>
+</div>
+<div class="row g-4">
+<div class="col-lg-8">
+<div class="swc-card pwd-card mb-4" id="pwdCard">
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+<div class="d-flex align-items-center gap-2">
+<div class="stat-icon" style="background:#EDE9FE; color:#7C3AED;"><i class="bi bi-universal-access-circle"></i></div>
+<div>
+<h6 class="section-title mb-0">♿ PWD Assistance</h6>
+<div class="section-sub devnagri">दिव्यांग व ज्येष्ठ वारकऱ्यांसाठी सहाय्य</div>
+</div>
+</div>
+<button aria-label="PWD Assistance Profile Settings" class="btn btn-sm fw-semibold" data-bs-target="#pwdProfileModal" data-bs-toggle="modal" style="background:#EDE9FE; color:#7C3AED; border-radius:10px;" type="button">
+<i class="bi bi-person-gear me-1"></i>Profile <span class="d-none d-sm-inline">(Optional)</span></button>
+</div>
+<p class="section-sub mb-3">Wheelchair, walking, visual, hearing, elderly or medical assistance — request help anytime during the Wari. Completely optional for Varkaris who don't need it.</p>
+<button aria-label="Request PWD Assistance — मला मदत हवी आहे" class="pwd-request-btn" data-bs-target="#pwdRequestModal" data-bs-toggle="modal" id="pwdRequestBtn" type="button">
+<i class="bi bi-universal-access"></i>
+<span class="pwd-request-btn-label devnagri">♿ मला मदत हवी आहे</span>
+<span class="pwd-request-btn-sub">Request Assistance</span>
+</button>
+<div aria-live="polite" class="d-none" id="pwdActiveRequest" role="status"></div>
+<div class="pwd-offline-alert d-none devnagri" id="pwdOfflineNotice" role="alert">
+<i class="bi bi-wifi-off me-2"></i>इंटरनेट उपलब्ध नाही. तुमची मदतीची विनंती save केली आहे.
+</div>
+<div class="pwd-synced-alert d-none devnagri" id="pwdSyncedNotice" role="status">
+<i class="bi bi-check-circle-fill me-2"></i>इंटरनेट परत आले! तुमची विनंती पाठवली गेली आहे.
+</div>
+</div>
+<div class="swc-card mb-4">
+<h6 class="section-title mb-3">Types of Assistance Available</h6>
+<div class="row g-2 g-md-3">
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">🦽 Wheelchair assistance</div></div>
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">🚶 Walking assistance</div></div>
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">👁️ Visual assistance</div></div>
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">👂 Hearing assistance</div></div>
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">🧓 Elderly assistance</div></div>
+<div class="col-6 col-md-4"><div class="pwd-check-card" style="pointer-events:none;">🏥 Medical assistance</div></div>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="emergency-card">
+<div class="d-flex align-items-center gap-2 mb-3">
+<i class="bi bi-shield-exclamation fs-3 text-danger"></i>
+<div><h6 class="fw-bold mb-0">Need Immediate Help?</h6>
+<div class="section-sub">Our volunteer &amp; medical teams are ready to assist you.</div></div>
+</div>
+<div class="row g-2">
+<div class="col-6"><button class="em-btn primary w-100" data-bs-target="#sosModal" data-bs-toggle="modal"><i class="bi bi-exclamation-octagon-fill fs-5"></i><span>SOS</span></button></div>
+<div class="col-6"><button class="em-btn secondary w-100"><i class="bi bi-person-raised-hand fs-5"></i><span>Call Volunteer</span></button></div>
+</div>
+</div>
+<div class="swc-card mt-4">
+<h6 class="section-title mb-2"><i class="bi bi-info-circle me-1" style="color:#7C3AED;"></i>How it works</h6>
+<p class="section-sub mb-0" style="font-size:.84rem;">Tap "मला मदत हवी आहे" to send a request with your live location. A volunteer will be assigned and you can track status here. You can also save an assistance profile so future requests are faster — this is entirely optional.</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal fade" id="sosModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content" style="border-radius:18px; border:0;">
+<div class="modal-body text-center p-4">
+<div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:64px;height:64px;border-radius:50%;background:#FEE2E2;">
+<i class="bi bi-exclamation-octagon-fill fs-2 text-danger"></i>
+</div>
+<h5 class="fw-bold" data-i18n="t_cd94ab53bf">Send Emergency SOS?</h5>
+<p class="text-muted mb-2" style="font-size:.9rem;"><span data-i18n="t_832b8ee15f">Your current location</span><strong data-i18n="t_aee12bf366">(Saswad, near Jejuri Road)</strong><span data-i18n="t_2f35d0ad42">will be shared immediately with the Admin and nearby Volunteer teams so they can reach you as fast as possible.</span></p>
+<div class="d-none" id="sosLinkedRequest" style="font-size:.8rem; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:10px; padding:.5rem .75rem; margin-bottom:1rem; color:#991B1B; font-weight:600;"></div>
+<div class="d-flex gap-2">
+<button class="btn btn-light flex-grow-1 fw-semibold" data-bs-dismiss="modal" data-i18n="t_ea4788705e" style="border-radius:12px;">Cancel</button>
+<button class="btn flex-grow-1 fw-semibold text-white" data-bs-dismiss="modal" id="sosConfirmBtn" style="background:var(--sos); border-radius:12px;">
+<i class="bi bi-send-fill me-1"></i><span data-i18n="t_d4c2cff01f">Confirm &amp; Send SOS</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="pwdProfileModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal-content pwd-modal-content">
+<div class="modal-header">
+<h5 class="fw-bold mb-0"><i class="bi bi-person-gear me-2" style="color:#7C3AED;"></i>PWD Assistance Profile</h5>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+<p class="section-sub mb-3">This information is <strong>optional</strong>. Fill it in only if you or someone in your family needs regular assistance during the Wari. You can skip this completely.</p>
+<div class="mb-3">
+<label class="form-label d-block">Requires special assistance?</label>
+<div class="btn-group w-100" role="group" aria-label="Requires special assistance">
+<input autocomplete="off" class="btn-check" id="pwdReqNo" name="pwdRequiresAssistance" type="radio" value="no"/>
+<label class="btn pwd-toggle-btn" for="pwdReqNo">No</label>
+<input autocomplete="off" class="btn-check" id="pwdReqYes" name="pwdRequiresAssistance" type="radio" value="yes"/>
+<label class="btn pwd-toggle-btn" for="pwdReqYes">Yes</label>
+</div>
+</div>
+<div class="d-none" id="pwdProfileDetails">
+<label class="form-label d-block">Assistance type <span class="section-sub">(select all that apply)</span></label>
+<div class="row g-2 mb-3" id="pwdProfileTypes">
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="wheelchair"/>🦽 Wheelchair assistance</label></div>
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="walking"/>🚶 Walking assistance</label></div>
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="visual"/>👁️ Visual assistance</label></div>
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="hearing"/>👂 Hearing assistance</label></div>
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="elderly"/>🧓 Elderly assistance</label></div>
+<div class="col-6"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="medical"/>🏥 Medical assistance</label></div>
+<div class="col-12"><label class="pwd-check-card"><input class="form-check-input me-2" type="checkbox" value="other"/>➕ Other</label></div>
+</div>
+<label class="form-label" for="pwdProfileNotes">Additional assistance requirements</label>
+<textarea class="form-control" id="pwdProfileNotes" placeholder="E.g. needs a wheelchair-friendly path, travels with a caretaker…" rows="3"></textarea>
+</div>
+</div>
+<div class="modal-footer border-0 pt-0">
+<button class="btn btn-light flex-grow-1 fw-semibold" data-bs-dismiss="modal" style="border-radius:12px;" type="button">Cancel</button>
+<button class="btn flex-grow-1 fw-semibold text-white" id="pwdProfileSaveBtn" style="background:#7C3AED; border-radius:12px;" type="button"><i class="bi bi-check2 me-1"></i>Save Profile</button>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="pwdRequestModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal-content pwd-modal-content">
+<div class="modal-header">
+<h5 class="fw-bold mb-0 devnagri">♿ मला मदत हवी आहे</h5>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+<label class="form-label d-block">What kind of help do you need?</label>
+<div class="row g-2 mb-3" id="pwdTypeGrid">
+<div class="col-6"><button aria-label="Wheelchair" class="pwd-type-btn" data-type="wheelchair" type="button"><span class="pwd-type-emoji">🦽</span><span>Wheelchair</span><span class="devnagri pwd-type-mr">व्हीलचेअर मदत</span></button></div>
+<div class="col-6"><button aria-label="Walking support" class="pwd-type-btn" data-type="walking" type="button"><span class="pwd-type-emoji">🚶</span><span>Walking support</span><span class="devnagri pwd-type-mr">चालण्यासाठी मदत</span></button></div>
+<div class="col-6"><button aria-label="Visual support" class="pwd-type-btn" data-type="visual" type="button"><span class="pwd-type-emoji">👁️</span><span>Visual support</span><span class="devnagri pwd-type-mr">दृष्टी मदत</span></button></div>
+<div class="col-6"><button aria-label="Hearing support" class="pwd-type-btn" data-type="hearing" type="button"><span class="pwd-type-emoji">👂</span><span>Hearing support</span><span class="devnagri pwd-type-mr">श्रवण मदत</span></button></div>
+<div class="col-6"><button aria-label="Medical support" class="pwd-type-btn" data-type="medical" type="button"><span class="pwd-type-emoji">🏥</span><span>Medical support</span><span class="devnagri pwd-type-mr">वैद्यकीय मदत</span></button></div>
+<div class="col-6"><button aria-label="Route or camp assistance" class="pwd-type-btn" data-type="route" type="button"><span class="pwd-type-emoji">📍</span><span>Route/Camp</span><span class="devnagri pwd-type-mr">मार्ग/कॅम्प मदत</span></button></div>
+<div class="col-12"><button aria-label="General assistance" class="pwd-type-btn" data-type="general" type="button"><span class="pwd-type-emoji">🤝</span><span>General assistance</span><span class="devnagri pwd-type-mr">सर्वसाधारण मदत</span></button></div>
+</div>
+<label class="form-label" for="pwdRequestDesc">Short description <span class="section-sub">(optional)</span></label>
+<textarea class="form-control mb-3" id="pwdRequestDesc" placeholder="Tell us briefly what you need…" rows="2"></textarea>
+<div class="mb-3">
+<label class="form-label d-block">Priority</label>
+<div class="btn-group w-100" role="group" aria-label="Priority">
+<input autocomplete="off" checked="" class="btn-check" id="pwdPrioNormal" name="pwdPriority" type="radio" value="Normal"/>
+<label class="btn pwd-toggle-btn" for="pwdPrioNormal">Normal</label>
+<input autocomplete="off" class="btn-check" id="pwdPrioHigh" name="pwdPriority" type="radio" value="High"/>
+<label class="btn pwd-toggle-btn" for="pwdPrioHigh">High / Urgent</label>
+</div>
+</div>
+<div class="pwd-location-chip" id="pwdLocationChip"><i class="bi bi-geo-alt-fill me-2"></i><span id="pwdLocationText">Attaching your current location…</span></div>
+</div>
+<div class="modal-footer border-0 pt-0">
+<button class="btn btn-light flex-grow-1 fw-semibold" data-bs-dismiss="modal" style="border-radius:12px;" type="button">Cancel</button>
+<button class="btn flex-grow-1 fw-semibold text-white" disabled="" id="pwdRequestSubmitBtn" style="background:#7C3AED; border-radius:12px;" type="button"><i class="bi bi-send-fill me-1"></i><span class="devnagri">विनंती पाठवा</span> · Send Request</button>
+</div>
+</div>
+</div>
+</div>
+<button class="ai-fab" id="aiFabBtn"><i class="bi bi-robot fs-5"></i><span data-i18n="t_ee4ccd2371">Ask Wari AI</span></button>
+<div class="ai-panel" id="aiPanel">
+<div class="ai-panel-head d-flex align-items-center justify-content-between">
+<div class="d-flex align-items-center gap-2">
+<i class="bi bi-robot fs-5"></i>
+<div>
+<div class="fw-bold" data-i18n="t_ffcc7d21dd" style="font-size:.9rem;">Wari AI Assistant</div>
+<div data-i18n="t_527ffe3ce5" style="font-size:.7rem; opacity:.85;">Ask me anything about your Wari</div>
+</div>
+</div>
+<button class="btn-close btn-close-white" id="aiCloseBtn"></button>
+</div>
+<div class="p-3">
+<div class="section-sub mb-2" data-i18n="t_0158f3eca4">Suggested questions</div>
+<button class="ai-chip devnagri">आजचा मुक्काम कुठे आहे?</button>
+<button class="ai-chip devnagri">जवळचं अन्नछत्र कुठे आहे?</button>
+<button class="ai-chip devnagri">जवळचं पाणी कुठे मिळेल?</button>
+<button class="ai-chip devnagri" data-i18n="t_3e0cce9192">जवळची medical help कुठे आहे?</button>
+<button class="ai-chip devnagri">आज पाऊस पडेल का?</button>
+<button class="ai-chip devnagri" data-i18n="t_bd0984b7a7">पुढचा route कोणता आहे?</button>
+<div class="d-flex gap-2 mt-2">
+<input class="form-control" data-i18n-placeholder="t_5d235d7c0a" placeholder="Type your question…" style="border-radius:10px; font-size:.85rem;" type="text"/>
+<button class="btn text-white" style="background:var(--emerald); border-radius:10px;"><i class="bi bi-send"></i></button>
+</div>
+</div>
+</div>
+<button class="mobile-sos-fab" data-bs-target="#sosModal" data-bs-toggle="modal"><i class="bi bi-exclamation-octagon-fill"></i></button>
+<nav class="bottom-nav">
+<a class="bn-item" href="index.html"><i class="bi bi-house-door-fill"></i><span data-i18n="t_8cf04a9734">Home</span></a>
+<a class="bn-item" href="live-map.html"><i class="bi bi-map"></i><span data-i18n="t_46f3ea056c">Map</span></a>
+<a class="bn-item" href="food.html"><i class="bi bi-grid"></i><span data-i18n="t_992a0f0542">Services</span></a>
+<a class="bn-item" href="ai-assistant.html" id="mobileAiBtn"><i class="bi bi-robot"></i><span data-i18n="t_0a40e3c91a">AI</span></a>
+<a class="bn-item" href="profile.html"><i class="bi bi-person"></i><span data-i18n="t_cce99c598c">Profile</span></a>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/i18n.js"></script></body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer Management — Smart Wari Connect Admin</title>
+<link rel="icon" href="assets/images/logo.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="volunteers" data-title="Volunteer Management">
+<div class="app-shell">
+  <aside id="sidebar"></aside>
+  <div class="flex-grow-1" style="min-width:0;">
+    <header id="topbar"></header>
+    <main id="page-content">
+
+      <div class="page-header fade-up">
+        <div class="breadcrumb-mini">Admin / People / Volunteers</div>
+        <h1>Volunteer Management</h1>
+        <p>Assign field areas, track availability, and coordinate the volunteer network.</p>
+      </div>
+
+      <div class="table-surface fade-up">
+        <div class="table-toolbar">
+          <div class="global-search" style="max-width:280px;">
+            <i class="bi bi-search"></i>
+            <input type="text" id="volSearch" placeholder="Search volunteers…">
+          </div>
+          <select class="form-select" style="max-width:170px;"><option>All Districts</option><option>Pune</option><option>Satara</option><option>Solapur</option></select>
+          <select class="form-select" style="max-width:170px;"><option>All Availability</option><option>Available</option><option>On Duty</option><option>On Emergency</option><option>Off Duty</option></select>
+          <button class="btn btn-flag ms-auto" data-bs-toggle="modal" data-bs-target="#assignModal"><i class="bi bi-person-plus"></i> Assign Volunteer</button>
+        </div>
+        <div class="table-responsive">
+        <table class="wari-table" id="volTable">
+          <thead><tr>
+            <th>Photo</th><th>Name</th><th>Mobile</th><th>District</th><th>Assigned Area</th><th>Availability</th><th>Emergency Van</th><th>Active Emergency</th><th>Last Location Update</th><th>Requests Completed</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td><td class="fw-semibold">Ramesh Kadam</td><td class="font-data">98220 11987</td><td>Solapur</td><td>Wakhri Halt</td><td><span class="badge-status badge-critical">On Emergency</span></td><td class="font-data">AMB-001</td><td class="font-data">EMG-1042</td><td class="font-data">3s ago</td><td class="font-data">142</td><td><span class="badge-status badge-active">Active</span></td><td class="table-actions"><button class="btn btn-outline-soft"><i class="bi bi-eye"></i></button> <button class="btn btn-outline-soft" title="Track" onclick="window.location='emergency-tracking.html?van=AMB-001'"><i class="bi bi-geo-alt"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-telephone"></i></button></td></tr>
+            <tr><td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td><td class="fw-semibold">Anita Jagtap</td><td class="font-data">90112 55621</td><td>Satara</td><td>Phaltan Medical Camp</td><td><span class="badge-status badge-critical">On Emergency</span></td><td class="font-data">AMB-003</td><td class="font-data">EMG-1041</td><td class="font-data">5s ago</td><td class="font-data">98</td><td><span class="badge-status badge-active">Active</span></td><td class="table-actions"><button class="btn btn-outline-soft"><i class="bi bi-eye"></i></button> <button class="btn btn-outline-soft" title="Track" onclick="window.location='emergency-tracking.html?van=AMB-003'"><i class="bi bi-geo-alt"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-telephone"></i></button></td></tr>
+            <tr><td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td><td class="fw-semibold">Vikram Salunkhe</td><td class="font-data">99001 34521</td><td>Pune</td><td>Alandi Start Point</td><td><span class="badge-status badge-closed">Off Duty</span></td><td class="font-data">AMB-002</td><td class="font-data">—</td><td class="font-data">12s ago</td><td class="font-data">210</td><td><span class="badge-status badge-blocked">Disabled</span></td><td class="table-actions"><button class="btn btn-outline-soft"><i class="bi bi-eye"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-geo-alt"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-telephone"></i></button></td></tr>
+            <tr><td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td><td class="fw-semibold">Pooja Deshmukh</td><td class="font-data">96552 87012</td><td>Solapur</td><td>Pandharpur Darshan Queue</td><td><span class="badge-status badge-active">Available</span></td><td class="font-data">AMB-004</td><td class="font-data">—</td><td class="font-data">40s ago</td><td class="font-data">176</td><td><span class="badge-status badge-active">Active</span></td><td class="table-actions"><button class="btn btn-outline-soft"><i class="bi bi-eye"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-geo-alt"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-telephone"></i></button></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="pagination-mini">
+          <span>Showing 1–4 of 1,286 volunteers</span>
+          <div class="ms-auto d-flex gap-1">
+            <button class="btn btn-sm btn-outline-soft"><i class="bi bi-chevron-left"></i></button>
+            <button class="btn btn-sm btn-flag">1</button>
+            <button class="btn btn-sm btn-outline-soft">2</button>
+            <button class="btn btn-sm btn-outline-soft"><i class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Assign Volunteer Modal -->
+<div class="modal fade" id="assignModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius:16px;">
+      <div class="modal-header"><h5 class="modal-title font-display">Assign Volunteer</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label small fw-semibold">Volunteer</label><select class="form-select"><option>Ramesh Kadam</option><option>Anita Jagtap</option><option>Pooja Deshmukh</option></select></div>
+        <div class="mb-3"><label class="form-label small fw-semibold">Assign Area / Route Point</label><input class="form-control" placeholder="e.g. Jejuri Halt"></div>
+        <div class="mb-0"><label class="form-label small fw-semibold">Notes</label><textarea class="form-control" rows="3" placeholder="Optional instructions"></textarea></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline-soft" data-bs-dismiss="modal">Cancel</button><button class="btn btn-flag" onclick="wariToast('Volunteer assigned successfully')" data-bs-dismiss="modal">Assign</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script>wireTableSearch('volSearch','volTable');</script>
+</body>
+</html>

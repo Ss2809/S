@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Chatbot Analytics — Smart Wari Connect Admin</title>
+<link rel="icon" href="assets/images/logo.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="chatbot" data-title="AI Chatbot">
+<div class="app-shell">
+  <aside id="sidebar"></aside>
+  <div class="flex-grow-1" style="min-width:0;">
+    <header id="topbar"></header>
+    <main id="page-content">
+
+      <div class="page-header fade-up">
+        <div class="breadcrumb-mini">Admin / Engagement / AI Chatbot</div>
+        <h1>AI Chatbot Analytics</h1>
+        <p>Track how Warkaris are using the assistant and where it needs improvement.</p>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4 col-xl-2-4"><div class="kpi-card fade-up"><div class="kpi-icon" style="background:#F5F3FF;color:#6D28D9;"><i class="bi bi-chat-square-text-fill"></i></div><div class="kpi-value">9,842</div><div class="kpi-label">Total Questions</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2-4"><div class="kpi-card kpi-emerald fade-up"><div class="kpi-icon" style="background:var(--emerald-50);color:var(--emerald);"><i class="bi bi-calendar-day-fill"></i></div><div class="kpi-value">1,204</div><div class="kpi-label">Questions Today</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2-4"><div class="kpi-card fade-up"><div class="kpi-icon" style="background:var(--saffron-50);color:var(--saffron);"><i class="bi bi-check-circle-fill"></i></div><div class="kpi-value">92.4%</div><div class="kpi-label">Successful Responses</div></div></div>
+        <div class="col-6 col-md-4 col-xl-2-4"><div class="kpi-card kpi-danger fade-up"><div class="kpi-icon" style="background:#FEF2F2;color:var(--danger);"><i class="bi bi-question-circle-fill"></i></div><div class="kpi-value">7.6%</div><div class="kpi-label">Unanswered Questions</div></div></div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-lg-5">
+          <div class="card-surface h-100 fade-up">
+            <div class="section-title"><span class="flag-dot"></span><h5>Most Asked Questions</h5></div>
+            <ul class="list-unstyled m-0">
+              <li class="d-flex justify-content-between align-items-center py-2 border-bottom"><span class="small">Today's Halt</span><span class="badge-status badge-active font-data">2,140</span></li>
+              <li class="d-flex justify-content-between align-items-center py-2 border-bottom"><span class="small">Nearby Food</span><span class="badge-status badge-active font-data">1,875</span></li>
+              <li class="d-flex justify-content-between align-items-center py-2 border-bottom"><span class="small">Nearby Water</span><span class="badge-status badge-active font-data">1,602</span></li>
+              <li class="d-flex justify-content-between align-items-center py-2 border-bottom"><span class="small">Medical Help</span><span class="badge-status badge-pending font-data">1,144</span></li>
+              <li class="d-flex justify-content-between align-items-center py-2 border-bottom"><span class="small">Route</span><span class="badge-status badge-active font-data">980</span></li>
+              <li class="d-flex justify-content-between align-items-center py-2"><span class="small">Weather</span><span class="badge-status badge-info font-data">742</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="card-surface h-100 fade-up">
+            <div class="section-title"><span class="flag-dot"></span><h5>Sample Conversation</h5></div>
+            <div style="max-height:280px;overflow-y:auto;">
+              <div class="chatbot-bubble user">Aajcha mukkam kuthe aahe? (Where is today's halt?)</div>
+              <div class="chatbot-bubble bot">Today's halt is at <strong>Saswad</strong>, approx 4 km ahead. Estimated arrival 2:30 PM.</div>
+              <div class="chatbot-bubble user">Nearby water point?</div>
+              <div class="chatbot-bubble bot">Nearest water point is <strong>Gram Panchayat Hand Pump</strong>, 400m from your location.</div>
+              <div class="chatbot-bubble user">I need medical help, feeling dizzy</div>
+              <div class="chatbot-bubble bot">Alerting nearest medical camp and volunteer now. Please stay where you are — help is on the way.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-surface fade-up">
+        <div class="table-toolbar">
+          <div class="global-search" style="max-width:280px;"><i class="bi bi-search"></i><input type="text" id="botSearch" placeholder="Search chatbot logs…"></div>
+          <select class="form-select" style="max-width:170px;"><option>All Outcomes</option><option>Answered</option><option>Unanswered</option><option>Escalated</option></select>
+        </div>
+        <div class="table-responsive">
+        <table class="wari-table" id="botTable">
+          <thead><tr><th>Time</th><th>User</th><th>Question</th><th>Category</th><th>Outcome</th></tr></thead>
+          <tbody>
+            <tr><td class="font-data">10:44 AM</td><td>Sunita P.</td><td>Aajcha mukkam kuthe aahe?</td><td>Route</td><td><span class="badge-status badge-active">Answered</span></td></tr>
+            <tr><td class="font-data">10:41 AM</td><td>Dattatray S.</td><td>Nearest ambulance number?</td><td>Medical</td><td><span class="badge-status badge-active">Answered</span></td></tr>
+            <tr><td class="font-data">10:35 AM</td><td>Guest User</td><td>Where can I charge my phone?</td><td>Other</td><td><span class="badge-status badge-blocked">Unanswered</span></td></tr>
+            <tr><td class="font-data">10:22 AM</td><td>Ganesh J.</td><td>Is there rain expected today?</td><td>Weather</td><td><span class="badge-status badge-active">Answered</span></td></tr>
+            <tr><td class="font-data">10:15 AM</td><td>Ashatai M.</td><td>I lost my bag near Jejuri</td><td>Lost &amp; Found</td><td><span class="badge-status badge-pending">Escalated</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script>wireTableSearch('botSearch','botTable');</script>
+<style>.col-xl-2-4{ flex:0 0 auto; width:100%; } @media(min-width:1200px){.col-xl-2-4{width:20%;}}</style>
+</body>
+</html>

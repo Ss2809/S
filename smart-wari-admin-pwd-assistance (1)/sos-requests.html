@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Requests — Smart Wari Connect Admin</title>
+<link rel="icon" href="assets/images/logo.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="sos-requests" data-title="Emergency Requests">
+<div class="app-shell">
+  <aside id="sidebar"></aside>
+  <div class="flex-grow-1" style="min-width:0;">
+    <header id="topbar"></header>
+    <main id="page-content">
+
+      <div class="page-header fade-up">
+        <div class="breadcrumb-mini">Admin / Emergency Response / Emergency Requests</div>
+        <h1>Emergency Requests</h1>
+        <p>All emergency medical requests raised across the platform, with live volunteer &amp; van assignment.</p>
+      </div>
+
+      <div class="row g-3 mb-3" id="emReqStats"></div>
+
+      <div class="table-surface fade-up">
+        <div class="table-toolbar">
+          <div class="global-search" style="max-width:280px;"><i class="bi bi-search"></i><input type="text" id="sosSearch" placeholder="Search emergency requests…"></div>
+          <select class="form-select" id="emReqTypeFilter" style="max-width:170px;">
+            <option value="">All Types</option>
+          </select>
+          <select class="form-select" id="emReqStatusFilter" style="max-width:170px;">
+            <option value="">All Status</option>
+            <option>PENDING</option><option>ACCEPTED</option><option>ON THE WAY</option>
+            <option>ARRIVED</option><option>COMPLETED</option><option>CANCELLED</option>
+          </select>
+          <a href="emergency-tracking.html" class="btn btn-flag ms-auto"><i class="bi bi-broadcast"></i> Live Tracking</a>
+        </div>
+        <div class="table-responsive">
+        <table class="wari-table" id="sosTable">
+          <thead><tr>
+            <th>Emergency ID</th><th>Varkari ID</th><th>Varkari Name</th><th>Type</th><th>Wari Stop</th>
+            <th>Assigned Volunteer</th><th>Emergency Van</th><th>Request Time</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="emReqTbody"></tbody>
+        </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal fade" id="emReqModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius:16px;">
+      <div class="modal-header"><h5 class="modal-title font-display">Update Emergency Request</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label class="form-label small fw-semibold">Assigned Volunteer</label><input class="form-control" id="emReqModalVolunteer" placeholder="e.g. Ramesh Kadam"></div>
+        <div class="mb-3"><label class="form-label small fw-semibold">Emergency Van</label><input class="form-control" id="emReqModalVan" placeholder="e.g. AMB-001"></div>
+        <div class="mb-0"><label class="form-label small fw-semibold">Status</label>
+          <select class="form-select" id="emReqModalStatus">
+            <option>PENDING</option><option>ACCEPTED</option><option>ON THE WAY</option>
+            <option>ARRIVED</option><option>COMPLETED</option><option>CANCELLED</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline-soft" data-bs-dismiss="modal">Cancel</button><button class="btn btn-flag" id="emReqModalSave" data-bs-dismiss="modal">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/emergency-data.js"></script>
+<script src="assets/js/emergency-common.js"></script>
+<script>
+let emReqModalIndex = null;
+
+async function loadAdminSOS(){
+  try {
+    const response = await fetch('http://localhost:5000/api/sos');
+    if (!response.ok) throw new Error(`SOS request failed with status ${response.status}`);
+    const result = await response.json();
+    console.log("ADMIN SOS DATA:", result);
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error('Invalid SOS API response');
+    }
+
+    EMERGENCY_REQUESTS.splice(0, EMERGENCY_REQUESTS.length, ...result.data.map(sos => ({
+      id: sos._id,
+      varkariId: sos.userId,
+      varkariName: sos.userName,
+      type: sos.emergencyType,
+      message: sos.message || '',
+      stop: `Lat: ${sos.latitude}, Lng: ${sos.longitude}`,
+      volunteer: sos.assignedVolunteerName || 'Unassigned',
+      van: '—',
+      time: sos.createdAt,
+      status: sos.status,
+      lat: sos.latitude,
+      lng: sos.longitude
+    })));
+
+    emReqRenderStats();
+    emReqRenderTable();
+  } catch (error) {
+    console.error('Admin SOS API error:', error);
+  }
+}
+
+function emReqRenderStats(){
+  const total = EMERGENCY_REQUESTS.length;
+  const active = EMERGENCY_REQUESTS.filter(r => ["PENDING","ACCEPTED","ON THE WAY"].includes(r.status)).length;
+  const pending = EMERGENCY_REQUESTS.filter(r => r.status === "PENDING").length;
+  const completed = EMERGENCY_REQUESTS.filter(r => r.status === "COMPLETED").length;
+  const cards = [
+    ["#FEF2F2","var(--danger)","bi-exclamation-triangle-fill", active, "Active Requests"],
+    ["#FFF7ED","var(--warning)","bi-hourglass-split", pending, "Awaiting Assignment"],
+    ["var(--emerald-50)","var(--emerald)","bi-check-circle-fill", completed, "Completed Today"],
+    ["#EFF6FF","#2563EB","bi-clock-history", "6.2 min", "Avg. Response Time"]
+  ];
+  document.getElementById('emReqStats').innerHTML = cards.map(([bg,color,icon,val,label]) => `
+    <div class="col-6 col-md-3"><div class="stat-mini fade-up"><div class="ic" style="background:${bg};color:${color};"><i class="bi ${icon}"></i></div>
+    <div><div class="kpi-value font-data" style="font-size:1.2rem;">${val}</div><div class="small text-muted">${label}</div></div></div></div>`).join('');
+  document.getElementById('emReqTypeFilter').innerHTML = '<option value="">All Types</option>' +
+    [...new Set(EMERGENCY_REQUESTS.map(r => r.type))].map(t => `<option>${t}</option>`).join('');
+}
+
+function emReqRenderTable(){
+  const q = (document.getElementById('sosSearch').value || '').toLowerCase();
+  const typeF = document.getElementById('emReqTypeFilter').value;
+  const statusF = document.getElementById('emReqStatusFilter').value;
+  const rows = EMERGENCY_REQUESTS.map((r, i) => ({ r, i })).filter(({r}) => {
+    if (typeF && r.type !== typeF) return false;
+    if (statusF && r.status !== statusF) return false;
+    if (q && !Object.values(r).join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('emReqTbody').innerHTML = rows.map(({r, i}) => `
+    <tr>
+      <td class="font-data fw-semibold">${r.id}</td>
+      <td class="font-data">${r.varkariId}</td>
+      <td class="fw-semibold">${r.varkariName}</td>
+      <td>${r.type}<div class="small text-muted">${r.message}</div></td>
+      <td>${r.stop}</td>
+      <td>${r.volunteer}</td>
+      <td class="font-data">${r.van}</td>
+      <td class="font-data">${r.time}</td>
+      <td><span class="badge-status ${emStatusBadgeClass(r.status)}">${r.status}</span></td>
+      <td class="table-actions">
+        <a class="btn btn-outline-soft" href="emergency-tracking.html?id=${r.id}" title="Track"><i class="bi bi-geo-alt"></i></a>
+        <button class="btn btn-outline-soft" onclick="emReqOpenModal(${i})" title="Update"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-outline-soft" title="Call"><i class="bi bi-telephone"></i></button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="10" class="text-center text-muted py-4">No emergency requests match your filters.</td></tr>';
+}
+
+function emReqOpenModal(i){
+  emReqModalIndex = i;
+  const r = EMERGENCY_REQUESTS[i];
+  document.getElementById('emReqModalVolunteer').value = r.volunteer === 'Unassigned' ? '' : r.volunteer;
+  document.getElementById('emReqModalVan').value = r.van === '—' ? '' : r.van;
+  document.getElementById('emReqModalStatus').value = r.status;
+  new bootstrap.Modal(document.getElementById('emReqModal')).show();
+}
+
+document.getElementById('emReqModalSave').addEventListener('click', () => {
+  if (emReqModalIndex === null) return;
+  const r = EMERGENCY_REQUESTS[emReqModalIndex];
+  r.volunteer = document.getElementById('emReqModalVolunteer').value || 'Unassigned';
+  r.van = document.getElementById('emReqModalVan').value || '—';
+  r.status = document.getElementById('emReqModalStatus').value;
+  emReqRenderTable();
+  wariToast(`${r.id} updated to ${r.status}`);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  EMERGENCY_REQUESTS.splice(0, EMERGENCY_REQUESTS.length);
+  emReqRenderStats();
+  emReqRenderTable();
+  loadAdminSOS();
+  setInterval(loadAdminSOS, 4000);
+  ['sosSearch','emReqTypeFilter','emReqStatusFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('input', emReqRenderTable);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports &amp; Analytics — Smart Wari Connect Admin</title>
+<link rel="icon" href="assets/images/logo.svg">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="reports" data-title="Reports & Analytics">
+<div class="app-shell">
+  <aside id="sidebar"></aside>
+  <div class="flex-grow-1" style="min-width:0;">
+    <header id="topbar"></header>
+    <main id="page-content">
+
+      <div class="page-header fade-up">
+        <div class="breadcrumb-mini">Admin / System / Reports &amp; Analytics</div>
+        <h1>Reports &amp; Analytics</h1>
+        <p>Export platform data and review the full system activity log.</p>
+      </div>
+
+      <div class="card-surface mb-4 fade-up">
+        <div class="section-title"><span class="flag-dot"></span><h5>Export Data</h5><span class="muted-note">Choose a dataset and a format</span></div>
+        <div class="row g-3">
+          <!-- Each export row -->
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-people text-muted"></i><span class="small fw-semibold">Users</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-person-badge text-muted"></i><span class="small fw-semibold">Volunteers</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-exclamation-triangle text-muted"></i><span class="small fw-semibold">SOS Requests</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-person-bounding-box text-muted"></i><span class="small fw-semibold">Missing Persons</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-cup-hot text-muted"></i><span class="small fw-semibold">Food Camps</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-heart-pulse text-muted"></i><span class="small fw-semibold">Medical Camps</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-signpost-split text-muted"></i><span class="small fw-semibold">Route Reports</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-heart-pulse-fill text-muted"></i><span class="small fw-semibold">Emergency Reports</span></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as CSV')">CSV</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Reports -->
+      <div class="card-surface mb-4 fade-up">
+        <div class="section-title"><span class="flag-dot"></span><h5>Emergency Overview</h5></div>
+        <div class="row g-3 mb-4" id="emRepStats"></div>
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6">
+            <div class="section-title"><span class="flag-dot"></span><h5>Emergencies by Wari Stop</h5></div>
+            <canvas id="chartEmByStop" height="160"></canvas>
+          </div>
+          <div class="col-lg-6">
+            <div class="section-title"><span class="flag-dot"></span><h5>Emergencies by Type</h5></div>
+            <canvas id="chartEmByType" height="180"></canvas>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="section-title m-0 mb-2"><h5 class="m-0" style="font-size:.9rem;">Volunteer Performance</h5></div>
+            <div class="table-responsive"><table class="wari-table"><thead><tr><th>Volunteer</th><th>Emergencies Handled</th></tr></thead>
+              <tbody id="emRepVolTbody"></tbody></table></div>
+          </div>
+          <div class="col-lg-6">
+            <div class="section-title m-0 mb-2"><h5 class="m-0" style="font-size:.9rem;">Emergency Van Usage</h5></div>
+            <div class="table-responsive"><table class="wari-table"><thead><tr><th>Van</th><th>Status</th><th>Assigned Stop</th></tr></thead>
+              <tbody id="emRepVanTbody"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-surface fade-up">
+        <div class="table-toolbar">
+          <div class="section-title m-0"><span class="flag-dot"></span><h5>System Activity / Audit Log</h5></div>
+          <div class="global-search ms-auto" style="max-width:260px;"><i class="bi bi-search"></i><input type="text" id="auditSearch" placeholder="Search audit log…"></div>
+        </div>
+        <div class="table-responsive">
+        <table class="wari-table" id="auditTable">
+          <thead><tr><th>Admin</th><th>Action</th><th>Module</th><th>Date</th><th>Time</th><th>IP / Session</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="fw-semibold">R. Deshmukh</td><td>Added Food Camp</td><td>Food Camps</td><td class="font-data">22 Aug 2026</td><td class="font-data">10:52 AM</td><td class="font-data">103.21.4.12</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td class="fw-semibold">R. Deshmukh</td><td>Approved Missing Person Report</td><td>Missing Persons</td><td class="font-data">22 Aug 2026</td><td class="font-data">10:48 AM</td><td class="font-data">103.21.4.12</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td class="fw-semibold">S. Kale</td><td>Assigned Volunteer to Wakhri Halt</td><td>Volunteers</td><td class="font-data">22 Aug 2026</td><td class="font-data">10:30 AM</td><td class="font-data">49.32.7.88</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td class="fw-semibold">R. Deshmukh</td><td>Sent Heavy Rain Alert</td><td>Notifications</td><td class="font-data">21 Aug 2026</td><td class="font-data">08:14 PM</td><td class="font-data">103.21.4.12</td><td><span class="badge-status badge-active">Success</span></td></tr>
+            <tr><td class="fw-semibold">S. Kale</td><td>Attempted to disable Volunteer</td><td>Volunteers</td><td class="font-data">21 Aug 2026</td><td class="font-data">06:02 PM</td><td class="font-data">49.32.7.88</td><td><span class="badge-status badge-blocked">Failed</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/emergency-data.js"></script>
+<script src="assets/js/emergency-common.js"></script>
+<script>wireTableSearch('auditSearch','auditTable');</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const total = EMERGENCY_REQUESTS.length;
+  const active = EMERGENCY_REQUESTS.filter(r => ["PENDING","ACCEPTED","ON THE WAY"].includes(r.status)).length;
+  const completed = EMERGENCY_REQUESTS.filter(r => r.status === "COMPLETED").length;
+  const cancelled = EMERGENCY_REQUESTS.filter(r => r.status === "CANCELLED").length;
+  const stats = [
+    [total, "Total Emergencies"], [active, "Active Emergencies"],
+    [completed, "Completed"], [cancelled, "Cancelled"],
+    ["6.2 min", "Avg. Response Time"], ["14.8 min", "Avg. Arrival Time"]
+  ];
+  document.getElementById('emRepStats').innerHTML = stats.map(([v,l]) => `
+    <div class="col-6 col-md-2"><div class="kpi-value font-data" style="font-size:1.2rem;">${v}</div><div class="small text-muted">${l}</div></div>`).join('');
+
+  const byStop = {};
+  EMERGENCY_REQUESTS.forEach(r => byStop[r.stop] = (byStop[r.stop]||0)+1);
+  new Chart(document.getElementById('chartEmByStop'), {
+    type: 'bar',
+    data: { labels: Object.keys(byStop), datasets: [{ label: 'Emergencies', data: Object.values(byStop), backgroundColor: '#DC2626', borderRadius: 8, maxBarThickness: 34 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#EEF0F4' } }, x: { grid: { display: false } } } }
+  });
+
+  const byType = {};
+  EMERGENCY_REQUESTS.forEach(r => byType[r.type] = (byType[r.type]||0)+1);
+  new Chart(document.getElementById('chartEmByType'), {
+    type: 'doughnut',
+    data: { labels: Object.keys(byType), datasets: [{ data: Object.values(byType), backgroundColor: ['#DC2626','#F59E0B','#FF8C00','#7C3AED','#2563EB','#16A34A'], borderWidth: 3, borderColor: '#fff' }] },
+    options: { plugins: { legend: { position: 'bottom' } }, cutout: '62%' }
+  });
+
+  const byVolunteer = {};
+  EMERGENCY_REQUESTS.forEach(r => { if (r.volunteer !== 'Unassigned') byVolunteer[r.volunteer] = (byVolunteer[r.volunteer]||0)+1; });
+  document.getElementById('emRepVolTbody').innerHTML = Object.entries(byVolunteer).map(([name,count]) => `<tr><td class="fw-semibold">${name}</td><td class="font-data">${count}</td></tr>`).join('');
+
+  document.getElementById('emRepVanTbody').innerHTML = EMERGENCY_VANS.map(v => `
+    <tr><td class="fw-semibold font-data">${v.number}</td><td><span class="badge-status ${emStatusBadgeClass(v.status)}">${v.status}</span></td><td>${v.stop}</td></tr>`).join('');
+});
+</script>
+</body>
+</html>
