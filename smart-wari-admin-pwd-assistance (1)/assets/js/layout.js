@@ -192,6 +192,29 @@ function initLayout(){
   document.querySelectorAll('.fade-up').forEach((el, i) => {
     el.style.animationDelay = (i * 40) + 'ms';
   });
+
+  async function updateLiveBadges() {
+    try {
+      const sosRes = await fetch('http://localhost:5000/api/sos?status=PENDING');
+      if (sosRes.ok) {
+        const sosData = await sosRes.json();
+        const sosNav = document.querySelector('a[href="sos-requests.html"] .badge-count');
+        if (sosNav && sosData.count !== undefined) sosNav.textContent = sosData.count;
+      }
+    } catch (e) {}
+
+    try {
+      const pwdRes = await fetch('http://localhost:5000/api/pwd-requests?status=Pending');
+      if (pwdRes.ok) {
+        const pwdData = await pwdRes.json();
+        const pwdNav = document.querySelector('a[href="pwd-assistance.html"] .badge-count');
+        if (pwdNav && pwdData.count !== undefined) pwdNav.textContent = pwdData.count;
+      }
+    } catch (e) {}
+  }
+
+  updateLiveBadges();
+  setInterval(updateLiveBadges, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', initLayout);

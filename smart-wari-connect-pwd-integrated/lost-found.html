@@ -154,47 +154,22 @@
 <button class="wc-tab" data-i18n="t_a18bb08ea5" data-tab-target="reportTab">Report Item</button>
 </div>
 <div class="tab-pane-content" id="lostTab">
-<div class="row g-3">
-<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
-<div class="d-flex justify-content-between mb-2"><span class="status-pill alert" data-i18n="t_b578b733cb">Lost</span><span class="section-sub" data-i18n="t_b49e4c0280">2 hrs ago</span></div>
-<div class="svc-name mb-1" data-i18n="t_0970d469ca">Black Backpack</div>
-<div class="section-sub" data-i18n="t_529a022b33">Contains medicines &amp; a water bottle · Lost near Saswad crossing</div>
-</div></div>
-<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
-<div class="d-flex justify-content-between mb-2"><span class="status-pill alert" data-i18n="t_b578b733cb">Lost</span><span class="section-sub" data-i18n="t_255fa33d8e">5 hrs ago</span></div>
-<div class="svc-name mb-1" data-i18n="t_8110d0c37e">Steel Water Bottle</div>
-<div class="section-sub" data-i18n="t_dcd39734be">Blue colour, name tag "Ganesh" · Lost near Pune halt</div>
-</div></div>
-<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
-<div class="d-flex justify-content-between mb-2"><span class="status-pill alert" data-i18n="t_b578b733cb">Lost</span><span class="section-sub" data-i18n="t_44ba1391bb">1 day ago</span></div>
-<div class="svc-name mb-1" data-i18n="t_5020eaae41">Mobile Phone</div>
-<div class="section-sub" data-i18n="t_5c146712ba">Small Nokia keypad phone · Lost near Alandi</div>
-</div></div>
+<div class="row g-3" id="warkariLostList">
 </div>
 </div>
 <div class="tab-pane-content" id="foundTab" style="display:none;">
-<div class="row g-3">
-<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
-<div class="d-flex justify-content-between mb-2"><span class="status-pill open" data-i18n="t_5d695cc28c">Found</span><span class="section-sub" data-i18n="t_8cd6051e4d">1 hr ago</span></div>
-<div class="svc-name mb-1" data-i18n="t_41952cdd72">Prescription Glasses</div>
-<div class="section-sub" data-i18n="t_5e3ae89326">Found near Annachhatra camp · Held at Volunteer Desk</div>
-</div></div>
-<div class="col-md-6 col-xl-4"><div class="swc-card h-100">
-<div class="d-flex justify-content-between mb-2"><span class="status-pill open" data-i18n="t_5d695cc28c">Found</span><span class="section-sub" data-i18n="t_b38eaabc6d">3 hrs ago</span></div>
-<div class="svc-name mb-1" data-i18n="t_1ebe3db80e">Cloth Bag with Documents</div>
-<div class="section-sub" data-i18n="t_98b4049218">Found near Saswad water point · Held at Police Chowki</div>
-</div></div>
+<div class="row g-3" id="warkariFoundList">
 </div>
 </div>
 <div class="tab-pane-content" id="reportTab" style="display:none;">
 <div class="swc-card" style="max-width:560px;">
-<div class="alert alert-success d-none form-success-alert" style="border-radius:10px;"><i class="bi bi-check-circle-fill me-2"></i><span data-i18n="t_c6889b01dd">Item reported successfully.</span></div>
-<form data-demo-form="">
+<div class="alert alert-success d-none form-success-alert" id="lfSuccessAlert" style="border-radius:10px;"><i class="bi bi-check-circle-fill me-2"></i><span data-i18n="t_c6889b01dd">Item reported successfully.</span></div>
+<form id="warkariLfForm">
 <div class="mb-3"><label class="form-label" data-i18n="t_94f48dce4d">Item Type</label>
-<select class="form-select"><option data-i18n="t_5783cd471d">Lost Item</option><option data-i18n="t_7f3cbbc408">Found Item</option></select></div>
-<div class="mb-3"><label class="form-label" data-i18n="t_d9db367d7e">Item Description</label><input class="form-control" data-i18n-placeholder="t_7bf0c4f2ea" placeholder="e.g. Black backpack with medicines" type="text"/></div>
-<div class="mb-3"><label class="form-label" data-i18n="t_ce5bf55137">Location</label><input class="form-control" data-i18n-placeholder="t_80e38ea846" placeholder="Where lost / found" type="text"/></div>
-<div class="mb-3"><label class="form-label" data-i18n="t_1f99a0d1d9">Your Contact Number</label><input class="form-control" placeholder="+91" type="tel"/></div>
+<select class="form-select" id="lfType"><option value="Lost" data-i18n="t_5783cd471d">Lost Item</option><option value="Found" data-i18n="t_7f3cbbc408">Found Item</option></select></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_d9db367d7e">Item Description</label><input class="form-control" id="lfDesc" data-i18n-placeholder="t_7bf0c4f2ea" placeholder="e.g. Black backpack with medicines" required="" type="text"/></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_ce5bf55137">Location</label><input class="form-control" id="lfLocation" data-i18n-placeholder="t_80e38ea846" placeholder="Where lost / found" type="text"/></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_1f99a0d1d9">Your Contact Number</label><input class="form-control" id="lfContact" placeholder="+91" type="tel"/></div>
 <button class="btn w-100 fw-semibold text-white" style="background:var(--saffron); border-radius:12px;" type="submit"><i class="bi bi-send-fill me-2"></i><span data-i18n="t_a4d3b161ce">Submit</span></button>
 </form>
 </div>
@@ -255,5 +230,73 @@
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
-<script src="js/i18n.js"></script></body>
+<script src="js/i18n.js"></script>
+<script>
+async function loadWarkariLostFound() {
+  try {
+    const res = await fetch('http://localhost:5000/api/lost-found');
+    if (!res.ok) return;
+    const result = await res.json();
+    if (!result.success || !Array.isArray(result.data)) return;
+
+    const lostEl = document.getElementById('warkariLostList');
+    const foundEl = document.getElementById('warkariFoundList');
+
+    if (lostEl) {
+      const lostItems = result.data.filter(i => i.type === 'Lost');
+      lostEl.innerHTML = lostItems.map(item => `
+        <div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between mb-2"><span class="status-pill alert">${item.status}</span><span class="section-sub">${item.date || 'Live'}</span></div>
+        <div class="svc-name mb-1">${item.itemName}</div>
+        <div class="section-sub">${item.description} · ${item.location}</div>
+        </div></div>`).join('') || '<div class="col-12 text-muted">No lost items reported.</div>';
+    }
+
+    if (foundEl) {
+      const foundItems = result.data.filter(i => i.type === 'Found');
+      foundEl.innerHTML = foundItems.map(item => `
+        <div class="col-md-6 col-xl-4"><div class="swc-card h-100">
+        <div class="d-flex justify-content-between mb-2"><span class="status-pill open">${item.status}</span><span class="section-sub">${item.date || 'Live'}</span></div>
+        <div class="svc-name mb-1">${item.itemName}</div>
+        <div class="section-sub">${item.description} · ${item.location}</div>
+        </div></div>`).join('') || '<div class="col-12 text-muted">No found items reported.</div>';
+    }
+  } catch (e) {}
+}
+
+const lfForm = document.getElementById('warkariLfForm');
+if (lfForm) {
+  lfForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const type = document.getElementById('lfType').value;
+    const itemName = document.getElementById('lfDesc').value;
+    const location = document.getElementById('lfLocation').value;
+    const contactNumber = document.getElementById('lfContact').value;
+
+    try {
+      const res = await fetch('http://localhost:5000/api/lost-found', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type,
+          itemName,
+          description: itemName,
+          location,
+          contactNumber,
+          reporterName: 'Sunil Bhosale',
+          reporterRole: 'WARKARI'
+        })
+      });
+      if (res.ok) {
+        document.getElementById('lfSuccessAlert').classList.remove('d-none');
+        lfForm.reset();
+        loadWarkariLostFound();
+      }
+    } catch (err) {}
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadWarkariLostFound);
+</script>
+</body>
 </html>

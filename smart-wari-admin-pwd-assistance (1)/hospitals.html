@@ -67,6 +67,32 @@
 <script src="assets/js/emergency-data.js"></script>
 <script src="assets/js/emergency-common.js"></script>
 <script>
+async function loadHospitalsFromBackend() {
+  try {
+    const res = await fetch('http://localhost:5000/api/services?category=HOSPITAL');
+    if (!res.ok) return;
+    const result = await res.json();
+    if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+      MEDICAL_CENTERS.length = 0;
+      result.data.forEach(item => {
+        MEDICAL_CENTERS.push({
+          _id: item._id,
+          name: item.name,
+          type: item.details || 'Government Hospital',
+          address: item.location || 'Wari Corridor',
+          stop: item.stop || 'Pandharpur',
+          beds: item.capacity || 'Open',
+          contact: item.contact || '02186-223344',
+          lat: item.latitude || 17.6792,
+          lng: item.longitude || 75.3316,
+          status: item.status || 'Open'
+        });
+      });
+      hospRenderTable();
+    }
+  } catch (e) {}
+}
+
 function hospRenderTable(){
   const q = (document.getElementById('hospSearch').value || '').toLowerCase();
   const rows = MEDICAL_CENTERS.filter(m => !q || Object.values(m).join(' ').toLowerCase().includes(q));
@@ -78,32 +104,46 @@ function hospRenderTable(){
       <td>${m.stop}</td>
       <td class="font-data">${m.beds || '—'}</td>
       <td class="font-data">${m.contact}</td>
-      <td class="font-data">${m.lat.toFixed(4)}</td>
-      <td class="font-data">${m.lng.toFixed(4)}</td>
+      <td class="font-data">${Number(m.lat).toFixed(4)}</td>
+      <td class="font-data">${Number(m.lng).toFixed(4)}</td>
       <td><span class="badge-status ${emStatusBadgeClass(m.status)}">${m.status}</span></td>
       <td class="table-actions"><button class="btn btn-outline-soft"><i class="bi bi-eye"></i></button> <button class="btn btn-outline-soft"><i class="bi bi-telephone"></i></button></td>
     </tr>`).join('');
 }
 
-document.getElementById('hospModalSave').addEventListener('click', () => {
+document.getElementById('hospModalSave').addEventListener('click', async () => {
   const name = document.getElementById('hospModalName').value.trim();
   if (!name){ wariToast('Name is required', 'danger'); return; }
-  MEDICAL_CENTERS.push({
-    name, type: document.getElementById('hospModalType').value,
-    address: document.getElementById('hospModalAddress').value,
+  
+  const payload = {
+    category: 'HOSPITAL',
+    name,
+    details: document.getElementById('hospModalType').value,
+    location: document.getElementById('hospModalAddress').value,
     stop: document.getElementById('hospModalStop').value,
     contact: document.getElementById('hospModalContact').value,
-    lat: parseFloat(document.getElementById('hospModalLat').value) || 0,
-    lng: parseFloat(document.getElementById('hospModalLng').value) || 0,
-    status: document.getElementById('hospModalStatus').value, beds: '—'
-  });
-  hospRenderTable();
-  wariToast(`${name} added`);
+    latitude: parseFloat(document.getElementById('hospModalLat').value) || 0,
+    longitude: parseFloat(document.getElementById('hospModalLng').value) || 0,
+    status: document.getElementById('hospModalStatus').value
+  };
+
+  try {
+    await fetch('http://localhost:5000/api/services', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    loadHospitalsFromBackend();
+    wariToast(`${name} added`);
+  } catch (e) {
+    wariToast('Error saving hospital');
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('hospModalStop').innerHTML = WARI_STOPS.map(s => `<option>${s}</option>`).join('');
   hospRenderTable();
+  loadHospitalsFromBackend();
   document.getElementById('hospSearch').addEventListener('input', hospRenderTable);
 });
 </script>

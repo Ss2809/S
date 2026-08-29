@@ -27,21 +27,51 @@
       <h1 class="font-display mt-2" style="font-size:1.3rem;">Smart Wari Connect</h1>
       <div class="small text-muted">Admin Control Center</div>
     </div>
-    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+    <form id="adminLoginForm">
+      <div id="loginAlert" class="alert alert-danger d-none py-2 small" style="border-radius:10px;"></div>
       <div class="mb-3">
         <label class="form-label small fw-semibold">Admin Email</label>
-        <input type="email" class="form-control" placeholder="admin@smartwariconnect.in" required>
+        <input type="email" id="adminEmail" class="form-control" placeholder="admin@smartwariconnect.in" value="admin@smartwariconnect.in" required>
       </div>
       <div class="mb-3">
         <label class="form-label small fw-semibold">Password</label>
-        <input type="password" class="form-control" placeholder="••••••••" required>
+        <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" value="admin" required>
       </div>
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="form-check"><input class="form-check-input" type="checkbox" id="remember"><label class="form-check-label small" for="remember">Remember me</label></div>
         <a href="#" class="small" style="color:var(--deep-orange);">Forgot password?</a>
       </div>
-      <button class="btn btn-flag w-100 py-2" type="submit"><i class="bi bi-box-arrow-in-right"></i> Sign In</button>
+      <button class="btn btn-flag w-100 py-2" id="loginBtn" type="submit"><i class="bi bi-box-arrow-in-right"></i> Sign In</button>
     </form>
+    <script>
+      document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('adminEmail').value.trim();
+        const password = document.getElementById('adminPassword').value;
+        const btn = document.getElementById('loginBtn');
+        const alertEl = document.getElementById('loginAlert');
+        btn.disabled = true;
+        alertEl.classList.add('d-none');
+
+        try {
+          const res = await fetch('http://localhost:5000/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const result = await res.json();
+          if (!res.ok || !result.success) {
+            throw new Error(result.message || 'Login failed');
+          }
+          localStorage.setItem('swc_admin_user', JSON.stringify(result.data));
+          window.location.href = 'index.html';
+        } catch (err) {
+          alertEl.textContent = err.message || 'Unable to connect to backend';
+          alertEl.classList.remove('d-none');
+          btn.disabled = false;
+        }
+      });
+    </script>
     <div class="text-center small text-muted mt-4">Protected admin area · Smart Wari Connect &copy; 2026</div>
   </div>
 </body>

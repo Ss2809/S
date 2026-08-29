@@ -59,6 +59,65 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('mpSearch','mpTable');</script>
+<script>
+  wireTableSearch('mpSearch','mpTable');
+
+  async function loadMissingPersonsAdmin() {
+    try {
+      const res = await fetch('http://localhost:5000/api/missing-persons');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const tbody = document.querySelector('#mpTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = result.data.map(item => {
+        const statusClass = item.status === 'Searching' || item.status === 'Approved' ? 'badge-info' : (item.status === 'Found' ? 'badge-active' : (item.status === 'Closed' ? 'badge-closed' : 'badge-pending'));
+        const dateStr = new Date(item.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+        return `<tr>
+          <td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td>
+          <td class="fw-semibold">${item.name}</td>
+          <td>${item.age || '—'}</td>
+          <td>${item.gender || '—'}</td>
+          <td>${item.lastSeenLocation || 'Wari Route'}</td>
+          <td>${item.reporterName}</td>
+          <td><span class="badge-status ${statusClass}">${item.status}</span></td>
+          <td class="font-data">${dateStr}</td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="View details"><i class="bi bi-eye"></i></button>
+            ${item.status === 'Pending Verification' ? `<button class="btn btn-emerald" onclick="updateMissingStatus('${item._id}','Searching')" title="Approve & Broadcast"><i class="bi bi-check-lg"></i></button>` : ''}
+            ${item.status === 'Searching' || item.status === 'Approved' ? `<button class="btn btn-outline-soft" onclick="updateMissingStatus('${item._id}','Found')" title="Mark Found"><i class="bi bi-person-check"></i></button>` : ''}
+            <button class="btn btn-outline-soft" onclick="deleteMissing('${item._id}')" title="Delete"><i class="bi bi-x-lg"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  async function updateMissingStatus(id, status) {
+    try {
+      await fetch(`http://localhost:5000/api/missing-persons/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      wariToast('Report updated to ' + status);
+      loadMissingPersonsAdmin();
+    } catch (e) { alert('Action failed'); }
+  }
+
+  async function deleteMissing(id) {
+    if (!confirm('Delete this missing person record?')) return;
+    try {
+      await fetch(`http://localhost:5000/api/missing-persons/${id}`, { method: 'DELETE' });
+      wariToast('Record deleted');
+      loadMissingPersonsAdmin();
+    } catch (e) { alert('Delete failed'); }
+  }
+
+  loadMissingPersonsAdmin();
+</script>
 </body>
 </html>

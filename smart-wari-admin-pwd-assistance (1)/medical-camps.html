@@ -68,6 +68,47 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('medSearch','medTable');</script>
+<script>
+  wireTableSearch('medSearch','medTable');
+
+  async function loadMedicalCampsAdmin() {
+    try {
+      const res = await fetch('http://localhost:5000/api/services?category=MEDICAL');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const tbody = document.querySelector('#medTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = result.data.map(item => {
+        const statusClass = item.status === 'Active' || item.status === 'Open' ? 'badge-active' : (item.status === 'Busy' ? 'badge-pending' : 'badge-closed');
+
+        return `<tr>
+          <td class="fw-semibold">${item.name}</td>
+          <td>${item.location || item.stop}</td>
+          <td>Dr. Team On-duty</td>
+          <td class="font-data">${item.contact || '108'}</td>
+          <td><span class="badge-status ${statusClass}">${item.status}</span></td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="Edit"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-soft" onclick="deleteMedItem('${item._id}')" title="Delete"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  async function deleteMedItem(id) {
+    if (!confirm('Delete this medical camp?')) return;
+    try {
+      await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
+      wariToast('Medical camp deleted');
+      loadMedicalCampsAdmin();
+    } catch (e) { alert('Delete failed'); }
+  }
+
+  loadMedicalCampsAdmin();
+</script>
 </body>
 </html>

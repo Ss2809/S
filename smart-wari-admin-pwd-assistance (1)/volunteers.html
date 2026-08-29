@@ -79,6 +79,48 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('volSearch','volTable');</script>
+<script>
+  wireTableSearch('volSearch','volTable');
+
+  async function loadAdminVolunteers() {
+    try {
+      const res = await fetch('http://localhost:5000/api/users?role=VOLUNTEER');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const vols = result.data;
+      const tbody = document.querySelector('#volTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = vols.map(v => {
+        const availClass = v.availability === 'Available' ? 'badge-active' : (v.availability === 'On Emergency' ? 'badge-critical' : 'badge-closed');
+        const statusClass = v.status === 'Active' ? 'badge-active' : 'badge-blocked';
+        return `<tr>
+          <td><img class="row-avatar" src="assets/images/avatar-placeholder.svg" alt=""></td>
+          <td class="fw-semibold">${v.name}</td>
+          <td class="font-data">${v.phone || '—'}</td>
+          <td>${v.district || 'Pune'}</td>
+          <td>${v.assignedArea || 'Jejuri Sector'}</td>
+          <td><span class="badge-status ${availClass}">${v.availability || 'Available'}</span></td>
+          <td class="font-data">${v.vanNumber || 'AMB-004'}</td>
+          <td class="font-data">${v.availability === 'On Emergency' ? 'EMG-1042' : '—'}</td>
+          <td class="font-data">Live</td>
+          <td class="font-data">${v.requestsCompleted || 120}</td>
+          <td><span class="badge-status ${statusClass}">${v.status || 'Active'}</span></td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="View"><i class="bi bi-eye"></i></button>
+            <button class="btn btn-outline-soft" title="Track" onclick="window.location='emergency-tracking.html?van=${v.vanNumber || 'AMB-001'}'"><i class="bi bi-geo-alt"></i></button>
+            <button class="btn btn-outline-soft" title="Call" onclick="window.location='tel:${v.phone || ''}'"><i class="bi bi-telephone"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {
+      console.warn('Failed to load volunteers from backend:', e);
+    }
+  }
+
+  loadAdminVolunteers();
+</script>
 </body>
 </html>

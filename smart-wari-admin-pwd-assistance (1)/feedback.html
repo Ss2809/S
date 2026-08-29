@@ -53,6 +53,38 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('fbSearch','fbTable');</script>
+<script>
+  wireTableSearch('fbSearch','fbTable');
+
+  async function loadAdminFeedback() {
+    try {
+      const res = await fetch('http://localhost:5000/api/feedback');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const tbody = document.querySelector('#fbTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = result.data.map(item => {
+        const stars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5));
+        const dateStr = new Date(item.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+        return `<tr>
+          <td class="fw-semibold">${item.name} (${item.role})</td>
+          <td>${item.category}</td>
+          <td class="text-warning">${stars}</td>
+          <td>${item.message}</td>
+          <td class="font-data">${dateStr}</td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="Reply"><i class="bi bi-reply"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  loadAdminFeedback();
+</script>
 </body>
 </html>

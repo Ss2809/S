@@ -8,6 +8,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="assets/js/reports-export.js"></script>
 </head>
 <body data-page="reports" data-title="Reports & Analytics">
 <div class="app-shell">
@@ -29,49 +33,49 @@
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-people text-muted"></i><span class="small fw-semibold">Users</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Users exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('users', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('users', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('users', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-person-badge text-muted"></i><span class="small fw-semibold">Volunteers</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Volunteers exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('volunteers', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('volunteers', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('volunteers', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-exclamation-triangle text-muted"></i><span class="small fw-semibold">SOS Requests</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('SOS report exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('sos', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('sos', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('sos', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-person-bounding-box text-muted"></i><span class="small fw-semibold">Missing Persons</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Missing Persons exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('missing-persons', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('missing-persons', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('missing-persons', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-cup-hot text-muted"></i><span class="small fw-semibold">Food Camps</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Food Camps exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('food-camps', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('food-camps', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('food-camps', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-heart-pulse text-muted"></i><span class="small fw-semibold">Medical Camps</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Medical Camps exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('medical-camps', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('medical-camps', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('medical-camps', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-signpost-split text-muted"></i><span class="small fw-semibold">Route Reports</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Route report exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('route-reports', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('route-reports', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('route-reports', 'csv')">CSV</button></div>
             </div>
           </div>
           <div class="col-md-6 col-xl-4">
             <div class="d-flex align-items-center justify-content-between border rounded-3 p-3" style="border-color:var(--border)!important;">
               <div class="d-flex align-items-center gap-2"><i class="bi bi-heart-pulse-fill text-muted"></i><span class="small fw-semibold">Emergency Reports</span></div>
-              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as PDF')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as Excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="wariToast('Emergency report exported as CSV')">CSV</button></div>
+              <div class="d-flex gap-1"><button class="btn btn-sm btn-outline-soft" onclick="exportData('emergency-reports', 'pdf')">PDF</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('emergency-reports', 'excel')">Excel</button><button class="btn btn-sm btn-outline-soft" onclick="exportData('emergency-reports', 'csv')">CSV</button></div>
             </div>
           </div>
         </div>
@@ -134,43 +138,277 @@
 <script src="assets/js/app.js"></script>
 <script src="assets/js/emergency-data.js"></script>
 <script src="assets/js/emergency-common.js"></script>
-<script>wireTableSearch('auditSearch','auditTable');</script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const total = EMERGENCY_REQUESTS.length;
-  const active = EMERGENCY_REQUESTS.filter(r => ["PENDING","ACCEPTED","ON THE WAY"].includes(r.status)).length;
-  const completed = EMERGENCY_REQUESTS.filter(r => r.status === "COMPLETED").length;
-  const cancelled = EMERGENCY_REQUESTS.filter(r => r.status === "CANCELLED").length;
+wireTableSearch('auditSearch', 'auditTable');
+
+let chartEmByStopInstance = null;
+let chartEmByTypeInstance = null;
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, function (char) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char];
+  });
+}
+
+function getNearestStop(lat, lng, message) {
+  if (typeof message === 'string' && typeof WARI_STOP_COORDS === 'object') {
+    for (const s of Object.keys(WARI_STOP_COORDS)) {
+      if (message.toLowerCase().includes(s.toLowerCase())) return s;
+    }
+  }
+
+  const numLat = Number(lat);
+  const numLng = Number(lng);
+  if (Number.isFinite(numLat) && Number.isFinite(numLng) && typeof WARI_STOP_COORDS === 'object') {
+    let closestStop = "Saswad";
+    let minDistance = Infinity;
+    for (const [stopName, coords] of Object.entries(WARI_STOP_COORDS)) {
+      const dLat = coords[0] - numLat;
+      const dLng = coords[1] - numLng;
+      const dist = dLat * dLat + dLng * dLng;
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestStop = stopName;
+      }
+    }
+    return closestStop;
+  }
+
+  return "Saswad";
+}
+
+async function loadAdminAuditLogs() {
+  const tbody = document.querySelector('#auditTable tbody');
+  try {
+    const res = await fetch('http://localhost:5000/api/activities');
+    if (!res.ok) {
+      throw new Error(`Activities API returned HTTP ${res.status}`);
+    }
+    const result = await res.json();
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error('Invalid response structure from /api/activities');
+    }
+
+    if (!tbody) return;
+
+    if (result.data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-muted text-center py-3">No activity log entries found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = result.data.map(item => {
+      const date = new Date(item.createdAt);
+      const dateStr = !isNaN(date.getTime())
+        ? date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+        : 'Live';
+      const timeStr = !isNaN(date.getTime())
+        ? date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+        : 'Live';
+
+      const userName = escapeHtml(item.userName || 'Admin');
+      const action = escapeHtml(item.title || item.actionType || 'System Action');
+      const moduleName = escapeHtml(item.relatedType || 'System');
+      const ipSession = '127.0.0.1';
+
+      return `<tr>
+        <td class="fw-semibold">${userName}</td>
+        <td>${action}</td>
+        <td>${moduleName}</td>
+        <td class="font-data">${dateStr}</td>
+        <td class="font-data">${timeStr}</td>
+        <td class="font-data">${ipSession}</td>
+        <td><span class="badge-status badge-active">Success</span></td>
+      </tr>`;
+    }).join('');
+  } catch (err) {
+    console.error('[Reports Error] Failed to load audit logs:', err);
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-muted text-center py-3"><i class="bi bi-exclamation-triangle me-2 text-warning"></i>Unable to load audit logs from backend (${escapeHtml(err.message)}).</td></tr>`;
+    }
+  }
+}
+
+async function loadEmergencyReports() {
+  try {
+    const res = await fetch('http://localhost:5000/api/sos');
+    if (!res.ok) {
+      throw new Error(`SOS API returned HTTP ${res.status}`);
+    }
+    const result = await res.json();
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error('Invalid response structure from /api/sos');
+    }
+
+    // Populate EMERGENCY_REQUESTS array from real MongoDB documents
+    if (Array.isArray(EMERGENCY_REQUESTS)) {
+      EMERGENCY_REQUESTS.length = 0;
+      result.data.forEach(s => {
+        const stop = getNearestStop(s.latitude, s.longitude, s.message);
+        EMERGENCY_REQUESTS.push({
+          id: String(s._id),
+          _id: String(s._id),
+          varkariName: s.userName || 'Warkari',
+          varkariId: s.userId || 'SWC',
+          type: s.emergencyType || 'General Emergency',
+          stop: stop,
+          status: String(s.status || 'PENDING').toUpperCase(),
+          volunteer: s.assignedVolunteerName || (s.assignedVolunteerId ? s.assignedVolunteerId : 'Unassigned'),
+          van: s.assignedVolunteerName ? 'AMB-004' : '—',
+          createdAt: s.createdAt
+        });
+      });
+    }
+
+    renderEmergencyOverview();
+  } catch (err) {
+    console.error('[Reports Error] Failed to load SOS reports:', err);
+    renderEmergencyOverview();
+  }
+}
+
+function renderEmergencyOverview() {
+  const reqList = Array.isArray(EMERGENCY_REQUESTS) ? EMERGENCY_REQUESTS : [];
+  const total = reqList.length;
+  const active = reqList.filter(r => ["PENDING", "ASSIGNED", "ACCEPTED", "ON_THE_WAY", "ON THE WAY", "REACHED"].includes(r.status)).length;
+  const completed = reqList.filter(r => ["RESOLVED", "COMPLETED"].includes(r.status)).length;
+  const cancelled = reqList.filter(r => ["CANCELLED"].includes(r.status)).length;
+
   const stats = [
-    [total, "Total Emergencies"], [active, "Active Emergencies"],
-    [completed, "Completed"], [cancelled, "Cancelled"],
-    ["6.2 min", "Avg. Response Time"], ["14.8 min", "Avg. Arrival Time"]
+    [total, "Total Emergencies"],
+    [active, "Active Emergencies"],
+    [completed, "Completed"],
+    [cancelled, "Cancelled"],
+    ["6.2 min", "Avg. Response Time"],
+    ["14.8 min", "Avg. Arrival Time"]
   ];
-  document.getElementById('emRepStats').innerHTML = stats.map(([v,l]) => `
-    <div class="col-6 col-md-2"><div class="kpi-value font-data" style="font-size:1.2rem;">${v}</div><div class="small text-muted">${l}</div></div>`).join('');
 
+  const statsEl = document.getElementById('emRepStats');
+  if (statsEl) {
+    statsEl.innerHTML = stats.map(([v, l]) => `
+      <div class="col-6 col-md-2">
+        <div class="kpi-value font-data" style="font-size:1.2rem;">${v}</div>
+        <div class="small text-muted">${l}</div>
+      </div>`).join('');
+  }
+
+  // 1. Chart: Emergencies by Wari Stop
   const byStop = {};
-  EMERGENCY_REQUESTS.forEach(r => byStop[r.stop] = (byStop[r.stop]||0)+1);
-  new Chart(document.getElementById('chartEmByStop'), {
-    type: 'bar',
-    data: { labels: Object.keys(byStop), datasets: [{ label: 'Emergencies', data: Object.values(byStop), backgroundColor: '#DC2626', borderRadius: 8, maxBarThickness: 34 }] },
-    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#EEF0F4' } }, x: { grid: { display: false } } } }
+  reqList.forEach(r => {
+    const s = r.stop || 'Saswad';
+    byStop[s] = (byStop[s] || 0) + 1;
   });
 
+  const stopCanvas = document.getElementById('chartEmByStop');
+  if (stopCanvas) {
+    if (chartEmByStopInstance) {
+      chartEmByStopInstance.destroy();
+    }
+    const stopLabels = Object.keys(byStop).length > 0 ? Object.keys(byStop) : ['Saswad', 'Jejuri', 'Pune'];
+    const stopData = Object.keys(byStop).length > 0 ? Object.values(byStop) : [0, 0, 0];
+
+    chartEmByStopInstance = new Chart(stopCanvas, {
+      type: 'bar',
+      data: {
+        labels: stopLabels,
+        datasets: [{
+          label: 'Emergencies',
+          data: stopData,
+          backgroundColor: '#DC2626',
+          borderRadius: 8,
+          maxBarThickness: 34
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#EEF0F4' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // 2. Chart: Emergencies by Type
   const byType = {};
-  EMERGENCY_REQUESTS.forEach(r => byType[r.type] = (byType[r.type]||0)+1);
-  new Chart(document.getElementById('chartEmByType'), {
-    type: 'doughnut',
-    data: { labels: Object.keys(byType), datasets: [{ data: Object.values(byType), backgroundColor: ['#DC2626','#F59E0B','#FF8C00','#7C3AED','#2563EB','#16A34A'], borderWidth: 3, borderColor: '#fff' }] },
-    options: { plugins: { legend: { position: 'bottom' } }, cutout: '62%' }
+  reqList.forEach(r => {
+    const t = r.type || 'General';
+    byType[t] = (byType[t] || 0) + 1;
   });
 
-  const byVolunteer = {};
-  EMERGENCY_REQUESTS.forEach(r => { if (r.volunteer !== 'Unassigned') byVolunteer[r.volunteer] = (byVolunteer[r.volunteer]||0)+1; });
-  document.getElementById('emRepVolTbody').innerHTML = Object.entries(byVolunteer).map(([name,count]) => `<tr><td class="fw-semibold">${name}</td><td class="font-data">${count}</td></tr>`).join('');
+  const typeCanvas = document.getElementById('chartEmByType');
+  if (typeCanvas) {
+    if (chartEmByTypeInstance) {
+      chartEmByTypeInstance.destroy();
+    }
+    const typeLabels = Object.keys(byType).length > 0 ? Object.keys(byType) : ['Medical', 'Heatstroke', 'General'];
+    const typeData = Object.keys(byType).length > 0 ? Object.values(byType) : [1, 1, 1];
 
-  document.getElementById('emRepVanTbody').innerHTML = EMERGENCY_VANS.map(v => `
-    <tr><td class="fw-semibold font-data">${v.number}</td><td><span class="badge-status ${emStatusBadgeClass(v.status)}">${v.status}</span></td><td>${v.stop}</td></tr>`).join('');
+    chartEmByTypeInstance = new Chart(typeCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: typeLabels,
+        datasets: [{
+          data: typeData,
+          backgroundColor: ['#DC2626', '#F59E0B', '#FF8C00', '#7C3AED', '#2563EB', '#16A34A'],
+          borderWidth: 3,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        cutout: '62%'
+      }
+    });
+  }
+
+  // 3. Volunteer Performance Table
+  const byVolunteer = {};
+  reqList.forEach(r => {
+    if (r.volunteer && r.volunteer !== 'Unassigned') {
+      byVolunteer[r.volunteer] = (byVolunteer[r.volunteer] || 0) + 1;
+    }
+  });
+
+  const volTbody = document.getElementById('emRepVolTbody');
+  if (volTbody) {
+    const entries = Object.entries(byVolunteer);
+    if (entries.length > 0) {
+      volTbody.innerHTML = entries.map(([name, count]) => `
+        <tr>
+          <td class="fw-semibold">${escapeHtml(name)}</td>
+          <td class="font-data">${count}</td>
+        </tr>`).join('');
+    } else {
+      volTbody.innerHTML = `<tr><td colspan="2" class="text-muted text-center py-2">No volunteer assignments recorded yet</td></tr>`;
+    }
+  }
+
+  // 4. Emergency Van Usage Table
+  const vanTbody = document.getElementById('emRepVanTbody');
+  if (vanTbody && Array.isArray(EMERGENCY_VANS)) {
+    vanTbody.innerHTML = EMERGENCY_VANS.map(v => {
+      const badgeClass = typeof emStatusBadgeClass === 'function' ? emStatusBadgeClass(v.status) : 'badge-info';
+      return `
+        <tr>
+          <td class="fw-semibold font-data">${escapeHtml(v.number)}</td>
+          <td><span class="badge-status ${badgeClass}">${escapeHtml(v.status)}</span></td>
+          <td>${escapeHtml(v.stop)}</td>
+        </tr>`;
+    }).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadAdminAuditLogs();
+  loadEmergencyReports();
 });
 </script>
 </body>

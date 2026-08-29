@@ -64,6 +64,49 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('waterSearch','waterTable');</script>
+<script>
+  wireTableSearch('waterSearch','waterTable');
+
+  async function loadWaterPointsAdmin() {
+    try {
+      const res = await fetch('http://localhost:5000/api/services?category=WATER');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const tbody = document.querySelector('#waterTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = result.data.map(item => {
+        const statusClass = item.status === 'Active' || item.status === 'Open' ? 'badge-active' : 'badge-closed';
+        const coords = (item.latitude && item.longitude) ? `${item.latitude.toFixed(2)}, ${item.longitude.toFixed(2)}` : '18.28, 74.16';
+
+        return `<tr>
+          <td class="fw-semibold">${item.name}</td>
+          <td>${item.location || item.stop}</td>
+          <td class="font-data">24 hrs</td>
+          <td>${item.details || 'RO purified water supply'}</td>
+          <td><span class="badge-status ${statusClass}">${item.status}</span></td>
+          <td><i class="bi bi-geo-alt text-muted"></i> ${coords}</td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="Edit"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-soft" onclick="deleteWaterItem('${item._id}')" title="Delete"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  async function deleteWaterItem(id) {
+    if (!confirm('Delete this water point?')) return;
+    try {
+      await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
+      wariToast('Water point deleted');
+      loadWaterPointsAdmin();
+    } catch (e) { alert('Delete failed'); }
+  }
+
+  loadWaterPointsAdmin();
+</script>
 </body>
 </html>

@@ -149,37 +149,7 @@
     </div>
     <div class="swc-card">
       <h6 class="section-title mb-3"><i class="bi bi-clock-history me-2 text-warning"></i>Activity History</h6>
-      <div class="atl">
-        <div class="atl-item sos">
-          <div class="atl-dot"><i class="bi bi-exclamation-octagon-fill"></i></div>
-          <div class="fw-bold">SOS Resolved — Rahul Patil</div>
-          <div class="section-sub">Medical assistance provided · Saswad Route · Today, 2:45 PM</div>
-          <span class="status-pill open mt-1 d-inline-block">Completed</span>
-        </div>
-        <div class="atl-item">
-          <div class="atl-dot"><i class="bi bi-hand-thumbs-up"></i></div>
-          <div class="fw-bold">Warkari Assisted — Ganesh Shinde</div>
-          <div class="section-sub">Water arranged · Near Saswad · Today, 2:10 PM</div>
-          <span class="status-pill open mt-1 d-inline-block">Completed</span>
-        </div>
-        <div class="atl-item medical">
-          <div class="atl-dot"><i class="bi bi-heart-pulse"></i></div>
-          <div class="fw-bold">Medical Request Completed — Anjali Wagh</div>
-          <div class="section-sub">Handed over to medical team · Jejuri Road · Today, 1:20 PM</div>
-          <span class="status-pill open mt-1 d-inline-block">Completed</span>
-        </div>
-        <div class="atl-item">
-          <div class="atl-dot"><i class="bi bi-person-check-fill"></i></div>
-          <div class="fw-bold">Missing Person Found — Ramesh Pawar</div>
-          <div class="section-sub">Reunited with family · Jejuri Road · Today, 11:05 AM</div>
-          <span class="status-pill open mt-1 d-inline-block">Completed</span>
-        </div>
-        <div class="atl-item">
-          <div class="atl-dot"><i class="bi bi-check2-circle"></i></div>
-          <div class="fw-bold">Request Accepted — Route Guidance</div>
-          <div class="section-sub">Sunita More · Saswad Crossing · Today, 10:40 AM</div>
-          <span class="status-pill open mt-1 d-inline-block">Completed</span>
-        </div>
+      <div class="atl" id="volActivityTimeline">
       </div>
     </div>
 
@@ -215,5 +185,36 @@
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
+<script>
+async function loadVolActivities() {
+  try {
+    const res = await fetch('http://localhost:5000/api/activities');
+    if (!res.ok) return;
+    const result = await res.json();
+    if (!result.success || !Array.isArray(result.data)) return;
+
+    const atl = document.getElementById('volActivityTimeline');
+    if (!atl) return;
+
+    atl.innerHTML = result.data.map(item => {
+      const isSos = item.relatedType === 'SOS' || item.actionType.includes('SOS');
+      const isMed = item.relatedType === 'PWD' || item.actionType.includes('PWD');
+      const dotClass = isSos ? 'sos' : (isMed ? 'medical' : '');
+      const icon = isSos ? 'bi-exclamation-octagon-fill' : (isMed ? 'bi-heart-pulse' : 'bi-hand-thumbs-up');
+      const timeStr = new Date(item.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+      return `
+        <div class="atl-item ${dotClass}">
+          <div class="atl-dot"><i class="bi ${icon}"></i></div>
+          <div class="fw-bold">${item.title}</div>
+          <div class="section-sub">${item.description} · ${timeStr}</div>
+          <span class="status-pill open mt-1 d-inline-block">Completed</span>
+        </div>`;
+    }).join('');
+  } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', loadVolActivities);
+</script>
 </body>
 </html>

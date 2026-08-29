@@ -67,8 +67,30 @@ function stopRenderTable(){
     </tr>`).join('');
 }
 
+async function syncStopEmergencies() {
+  try {
+    const res = await fetch('http://localhost:5000/api/sos');
+    if (!res.ok) return;
+    const result = await res.json();
+    if (result.success && Array.isArray(result.data)) {
+      EMERGENCY_REQUESTS.length = 0;
+      result.data.forEach(s => {
+        EMERGENCY_REQUESTS.push({
+          id: s._id,
+          stop: s.message && s.message.includes('Jejuri') ? 'Jejuri' : (s.message && s.message.includes('Saswad') ? 'Saswad' : 'Pune'),
+          status: s.status,
+          volunteer: s.assignedVolunteerName || 'Unassigned',
+          van: s.assignedVolunteerName ? 'AMB-004' : '—'
+        });
+      });
+      stopRenderTable();
+    }
+  } catch (e) {}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   stopRenderTable();
+  syncStopEmergencies();
   document.getElementById('stopSearch').addEventListener('input', stopRenderTable);
 });
 </script>

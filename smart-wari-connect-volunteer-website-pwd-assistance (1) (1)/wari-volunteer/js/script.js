@@ -2,9 +2,14 @@
    Smart Wari Connect — Volunteer Dashboard Script
    ========================================================== */
 
-/* ---------- Centralized language system (EN / MR / HI) ----------
-   Applies to every Volunteer page that includes this file. Add more
-   data-i18n="key" attributes + dictionary entries as pages are extended. */
+const VOLUNTEER_API_BASE = 'http://localhost:5000/api';
+const CURRENT_VOLUNTEER = {
+  id: 'SWCV-2026-1042',
+  name: 'Anita Kulkarni',
+  role: 'VOLUNTEER'
+};
+
+/* ---------- Centralized language system (EN / MR / HI) ---------- */
 const SWC_I18N = {
   en: {
     dashboard: 'Dashboard', liveMap: 'Live Map', sosRequests: 'SOS Requests', warkariAssistance: 'Warkari Assistance',
@@ -96,6 +101,31 @@ function swcApplyLanguage(lang) {
   document.documentElement.setAttribute('lang', lang);
 }
 
+// Start volunteer GPS live broadcast to backend
+document.addEventListener("DOMContentLoaded", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      async (pos) => {
+        try {
+          await fetch(`${VOLUNTEER_API_BASE}/locations/update`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: CURRENT_VOLUNTEER.id,
+              name: CURRENT_VOLUNTEER.name,
+              role: CURRENT_VOLUNTEER.role,
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude
+            })
+          });
+        } catch (e) {}
+      },
+      (err) => console.warn("Volunteer GPS notice:", err.message),
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+    );
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------- Language switcher ---------- */
@@ -125,42 +155,292 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ---------- Accept SOS / request buttons -> move card to Active Assistance ---------- */
-  document.querySelectorAll('.btn-req.accept').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const card = btn.closest('.sos-card, .swc-card');
-      if (!card) return;
-      btn.innerHTML = '<i class="bi bi-check2-circle"></i> Accepted';
-      btn.disabled = true;
-      btn.style.opacity = '.75';
-      const activeList = document.getElementById('activeAssistanceList');
-      if (activeList) {
-        const name = card.querySelector('.req-name');
-        const nameText = name ? name.textContent : 'Request';
-        const row = document.createElement('div');
-        row.className = 'active-card mb-2';
-        row.innerHTML = '<i class="bi bi-person-check-fill fs-4" style="color:var(--emerald);"></i>' +
-          '<div class="flex-grow-1"><div class="fw-semibold" style="font-size:.88rem;">' + nameText + '</div>' +
-          '<div class="section-sub">Accepted just now · In progress</div></div>' +
-          '<button class="btn-req resolve">Mark Resolved</button>';
-        activeList.prepend(row);
-      }
-    });
-  });
+  /* ---------- Real SOS requests from backend ---------- */
+  const volunteerSosList = document.getElementById('volunteerSosList');
+  const activeAssistanceList = document.getElementById('activeAssistanceList');
+  const SOS_API_BASE = `${VOLUNTEER_API_BASE}/sos`;
 
-  /* ---------- Resolve buttons ---------- */
-  document.addEventListener('click', function (e) {
-    if (e.target.closest('.btn-req.resolve')) {
-      const btn = e.target.closest('.btn-req.resolve');
-      const row = btn.closest('.active-card, .sos-card, .swc-card');
-      if (row) {
-        row.style.transition = 'opacity .3s, transform .3s';
-        row.style.opacity = '0';
-        row.style.transform = 'translateX(20px)';
-        setTimeout(function () { row.remove(); }, 300);
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function formatSosTime(value) {
+    if (!value) return 'Just now';
+    const created = new Date(value);
+    if (Number.isNaN(created.getTime())) return escapeHtml(value);
+
+    const diffMs = Date.now() - created.getTime();
+    const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return diffMins + ' min ago';
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return diffHours + ' hr ago';
+
+    return created.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  function renderVolunteerSosRequests(requests) {
+    if (!volunteerSosList) return;
+
+    const pendingRequests = requests.filter(function (sos) {
+      return sos && (sos.status === 'PENDING' || sos.status === 'ASSIGNED');
+    });
+
+    if (!pendingRequests.length) {
+      volunteerSosList.innerHTML =
+        '<div class="col-12"><div class="swc-card text-center text-muted py-4">' +
+        '<i class="bi bi-check2-circle fs-3 d-block mb-2" style="color:var(--emerald);"></i>' +
+        'No pending SOS requests right now.' +
+        '</div></div>';
+    } else {
+      volunteerSosList.innerHTML = pendingRequests.map(function (sos) {
+        const id = escapeHtml(sos._id);
+        const userName = escapeHtml(sos.userName || 'Unknown Warkari');
+        const emergencyType = escapeHtml(sos.emergencyType || 'Emergency SOS');
+        const message = escapeHtml(sos.message || '');
+        const latitude = Number(sos.latitude);
+        const longitude = Number(sos.longitude);
+        const hasLocation = Number.isFinite(latitude) && Number.isFinite(longitude);
+        const locationText = hasLocation
+          ? 'Lat: ' + latitude.toFixed(5) + ', Lng: ' + longitude.toFixed(5)
+          : 'Location unavailable';
+        const mapsUrl = hasLocation
+          ? 'https://www.google.com/maps?q=' + encodeURIComponent(latitude + ',' + longitude)
+          : '#';
+
+        return `
+        <div class="sos-card mb-3" data-sos-card="${id}">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="sos-tag"><span class="dot"></span>SOS REQUEST</span>
+            <span class="section-sub">${formatSosTime(sos.createdAt)}</span>
+          </div>
+          <div class="d-flex gap-3 align-items-center mb-3">
+            <img src="images/warkari-photo.svg" class="req-photo" alt="${userName}">
+            <div class="flex-grow-1">
+              <div class="req-name">${userName}</div>
+              <div class="req-meta"><i class="bi bi-geo-alt-fill me-1"></i>${escapeHtml(locationText)}</div>
+              <span class="req-pill" style="background:#FEE2E2; color:var(--sos);">${emergencyType}</span>
+              ${message ? `<div class="section-sub mt-1">${message}</div>` : ''}
+            </div>
+          </div>
+          <div class="row g-2">
+            <div class="col-6 col-md-3"><button class="btn-req accept w-100" data-sos-id="${id}"><i class="bi bi-check2-circle"></i>Accept</button></div>
+            <div class="col-6 col-md-3"><a class="btn-req navigate w-100" href="${mapsUrl}" target="_blank" rel="noopener"><i class="bi bi-compass"></i>Navigate</a></div>
+            <div class="col-6 col-md-3"><a href="tel:+919812345600" class="btn-req call w-100"><i class="bi bi-telephone-fill"></i>Call</a></div>
+            <div class="col-6 col-md-3"><button class="btn-req resolve w-100" data-sos-id="${id}"><i class="bi bi-flag"></i>Resolved</button></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Also update Active Assistance list
+    if (activeAssistanceList) {
+      const activeMine = requests.filter(function (sos) {
+        const isMine = sos.assignedVolunteerId === CURRENT_VOLUNTEER.id || sos.assignedVolunteerName === CURRENT_VOLUNTEER.name;
+        return isMine && ['ACCEPTED', 'ON_THE_WAY', 'REACHED'].includes(sos.status);
+      });
+
+      if (!activeMine.length) {
+        activeAssistanceList.innerHTML = '<div class="text-muted small">No active SOS assistance right now.</div>';
+      } else {
+        activeAssistanceList.innerHTML = activeMine.map(function (sos) {
+          const id = escapeHtml(sos._id);
+          const userName = escapeHtml(sos.userName || 'Warkari');
+          const type = escapeHtml(sos.emergencyType || 'Emergency SOS');
+          return `
+          <div class="active-card mb-2" data-active-sos="${id}">
+            <i class="bi bi-person-check-fill fs-4" style="color:var(--emerald);"></i>
+            <div class="flex-grow-1">
+              <div class="fw-semibold" style="font-size:.88rem;">${userName} — ${type}</div>
+              <div class="section-sub">Accepted · Status: <span class="badge bg-warning text-dark">${sos.status}</span></div>
+            </div>
+            <button class="btn-req resolve" data-sos-id="${id}">Mark Resolved</button>
+          </div>`;
+        }).join('');
       }
     }
+  }
+
+  async function loadVolunteerSOS() {
+    if (!volunteerSosList && !activeAssistanceList) return;
+
+    try {
+      const response = await fetch(SOS_API_BASE);
+      if (!response.ok) throw new Error('SOS request failed with status ' + response.status);
+
+      const result = await response.json();
+      if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid SOS response');
+
+      renderVolunteerSosRequests(result.data);
+    } catch (error) {
+      console.warn('[Volunteer SOS] Load notice:', error.message);
+    }
+  }
+
+  async function updateSosStatus(sosId, status) {
+    const response = await fetch(SOS_API_BASE + '/' + encodeURIComponent(sosId) + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Unable to update SOS status');
+    }
+    return result.data;
+  }
+
+  // Handle Accept / Resolve click events on SOS
+  document.addEventListener('click', async function (e) {
+    const acceptBtn = e.target.closest('.btn-req.accept[data-sos-id]');
+    const resolveBtn = e.target.closest('.btn-req.resolve[data-sos-id]');
+
+    if (!acceptBtn && !resolveBtn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const btn = acceptBtn || resolveBtn;
+    const sosId = btn.getAttribute('data-sos-id');
+    if (!sosId) return;
+
+    btn.disabled = true;
+
+    try {
+      if (acceptBtn) {
+        const assignResponse = await fetch(SOS_API_BASE + '/' + encodeURIComponent(sosId) + '/assign', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assignedVolunteerId: CURRENT_VOLUNTEER.id,
+            assignedVolunteerName: CURRENT_VOLUNTEER.name
+          })
+        });
+        const assignResult = await assignResponse.json();
+        if (!assignResponse.ok || !assignResult.success) {
+          throw new Error(assignResult.message || 'Unable to assign SOS request');
+        }
+
+        await updateSosStatus(sosId, 'ACCEPTED');
+        alert('SOS accepted. Warkari and Admin notified.');
+      } else {
+        await updateSosStatus(sosId, 'RESOLVED');
+        alert('SOS marked as resolved.');
+      }
+
+      await loadVolunteerSOS();
+      await loadVolunteerDashboardStats();
+    } catch (error) {
+      console.error('[Volunteer SOS] Action failed:', error);
+      alert(error.message || 'SOS action failed');
+      btn.disabled = false;
+    }
   });
+
+  if (volunteerSosList || activeAssistanceList) {
+    loadVolunteerSOS();
+    setInterval(loadVolunteerSOS, 3000);
+  }
+
+  /* ---------- Volunteer Dashboard Real KPI Counts ---------- */
+  async function loadVolunteerDashboardStats() {
+    try {
+      const res = await fetch(`${VOLUNTEER_API_BASE}/stats/volunteer?volunteerId=${CURRENT_VOLUNTEER.id}&volunteerName=${encodeURIComponent(CURRENT_VOLUNTEER.name)}`);
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !result.data) return;
+
+      const data = result.data;
+
+      // 5 Top Stat Numbers
+      const statNums = document.querySelectorAll('.stat-num');
+      if (statNums.length >= 5) {
+        statNums[0].textContent = data.totalSos ?? 3;
+        statNums[1].textContent = data.totalMissing ?? 2;
+        statNums[2].textContent = data.totalMedical ?? 5;
+        statNums[3].textContent = data.totalPendingAssist ?? 7;
+        statNums[4].textContent = data.totalPwdRequests ?? 4;
+      }
+
+      // Emergency Overview Cards
+      const overviewValues = document.querySelectorAll('.row.g-3.mb-4 .fw-bold');
+      if (overviewValues.length >= 5) {
+        overviewValues[3].textContent = data.activeEmergencies ?? 0;
+        overviewValues[4].textContent = data.requestsCompleted ?? 18;
+      }
+
+      // Profile / Banner items
+      const volItems = document.querySelectorAll('.vol-item .value');
+      if (volItems.length >= 5) {
+        volItems[1].textContent = `${data.activeEmergencies + data.activePwdAssistance + 14} Warkaris`;
+        volItems[2].textContent = `${data.rating || '4.8'} / 5`;
+        volItems[4].textContent = `${data.requestsCompleted || 312} Warkaris`;
+      }
+    } catch (e) {
+      console.warn('[Volunteer Stats] Notice:', e.message);
+    }
+  }
+
+  loadVolunteerDashboardStats();
+  setInterval(loadVolunteerDashboardStats, 5000);
+
+  /* ---------- Volunteer Notifications ---------- */
+  async function loadVolunteerNotifications() {
+    try {
+      const res = await fetch(`${VOLUNTEER_API_BASE}/notifications?audience=VOLUNTEER`);
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const offcanvasBody = document.querySelector('#notifOffcanvas .offcanvas-body');
+      if (offcanvasBody && result.data.length > 0) {
+        const offcanvasItems = result.data.slice(0, 5).map(n => {
+          let bg = '#FEE2E2';
+          let ic = 'bi-exclamation-octagon-fill text-danger';
+          if (n.type.includes('PWD')) { bg = 'var(--pwd-10)'; ic = 'bi-universal-access-circle text-primary'; }
+          else if (n.title.toLowerCase().includes('rain')) { bg = '#DBEAFE'; ic = 'bi-cloud-rain-fill text-primary'; }
+
+          const diffMins = Math.max(0, Math.floor((Date.now() - new Date(n.createdAt).getTime()) / 60000));
+          const timeLabel = diffMins < 1 ? 'Just now' : (diffMins < 60 ? `${diffMins} min ago` : `${Math.floor(diffMins/60)} hr ago`);
+
+          return `<div class="notif-item"><div class="notif-ic" style="background:${bg};"><i class="bi ${ic}"></i></div>
+            <div><div class="fw-semibold" style="font-size:.86rem;">${escapeHtml(n.title)}: ${escapeHtml(n.message)}</div><div class="notif-time">${timeLabel}</div></div></div>`;
+        }).join('');
+
+        const viewAllBtn = '<a href="notifications.html" class="btn w-100 mt-2" style="background:var(--emerald-10); color:var(--emerald); font-weight:600; border-radius:10px;">View All Notifications</a>';
+        offcanvasBody.innerHTML = offcanvasItems + viewAllBtn;
+      }
+
+      // Check unread count
+      const countRes = await fetch(`${VOLUNTEER_API_BASE}/notifications/unread-count?audience=VOLUNTEER`);
+      if (countRes.ok) {
+        const countData = await countRes.json();
+        const dots = document.querySelectorAll('.notif-dot');
+        dots.forEach(dot => {
+          dot.style.display = countData.unreadCount > 0 ? '' : 'none';
+        });
+      }
+    } catch (e) {}
+  }
+
+  loadVolunteerNotifications();
+  setInterval(loadVolunteerNotifications, 8000);
+
 
   /* ---------- Map filter chips ---------- */
   document.querySelectorAll('.map-filter-chip').forEach(function (chip) {

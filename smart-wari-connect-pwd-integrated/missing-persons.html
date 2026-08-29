@@ -152,17 +152,17 @@
 <div class="col-lg-5">
 <div class="swc-card">
 <h6 class="section-title mb-3"><i class="bi bi-person-plus me-2 text-warning"></i><span data-i18n="t_c9bc1b2da1">Report a Missing Person</span></h6>
-<div class="alert alert-success d-none form-success-alert" style="border-radius:10px;"><i class="bi bi-check-circle-fill me-2"></i><span data-i18n="t_bc702fbf4d">Report submitted. Volunteers have been notified.</span></div>
-<form data-demo-form="">
-<div class="mb-3"><label class="form-label" data-i18n="t_6300580296">Full Name</label><input class="form-control" data-i18n-placeholder="t_6097ed0c12" placeholder="e.g. Kamal Jadhav" required="" type="text"/></div>
+<div class="alert alert-success d-none form-success-alert" id="mpSuccessAlert" style="border-radius:10px;"><i class="bi bi-check-circle-fill me-2"></i><span data-i18n="t_bc702fbf4d">Report submitted. Volunteers have been notified.</span></div>
+<form id="warkariMpForm">
+<div class="mb-3"><label class="form-label" data-i18n="t_6300580296">Full Name</label><input class="form-control" id="mpName" data-i18n-placeholder="t_6097ed0c12" placeholder="e.g. Kamal Jadhav" required="" type="text"/></div>
 <div class="row g-2 mb-3">
-<div class="col-6"><label class="form-label" data-i18n="t_9d8d2d5ab1">Age</label><input class="form-control" data-i18n-placeholder="t_9d8d2d5ab1" placeholder="Age" type="number"/></div>
+<div class="col-6"><label class="form-label" data-i18n="t_9d8d2d5ab1">Age</label><input class="form-control" id="mpAge" data-i18n-placeholder="t_9d8d2d5ab1" placeholder="Age" type="number"/></div>
 <div class="col-6"><label class="form-label" data-i18n="t_019ec3132c">Gender</label>
-<select class="form-select"><option data-i18n="t_63889cfb9d">Male</option><option data-i18n="t_b719ce180e">Female</option><option data-i18n="t_6311ae17c1">Other</option></select></div>
+<select class="form-select" id="mpGender"><option value="Male" data-i18n="t_63889cfb9d">Male</option><option value="Female" data-i18n="t_b719ce180e">Female</option><option value="Other" data-i18n="t_6311ae17c1">Other</option></select></div>
 </div>
-<div class="mb-3"><label class="form-label" data-i18n="t_9f74e7ee4c">Last Seen Location</label><input class="form-control" data-i18n-placeholder="t_f94fd1294e" placeholder="e.g. Near Saswad Annachhatra" type="text"/></div>
-<div class="mb-3"><label class="form-label" data-i18n="t_c5810cbc9e">Description / Clothing</label><textarea class="form-control" data-i18n-placeholder="t_dfd74ab9ad" placeholder="Wearing saffron dhoti, carrying a tulsi mala…" rows="3"></textarea></div>
-<div class="mb-3"><label class="form-label" data-i18n="t_1f99a0d1d9">Your Contact Number</label><input class="form-control" placeholder="+91" type="tel"/></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_9f74e7ee4c">Last Seen Location</label><input class="form-control" id="mpLocation" data-i18n-placeholder="t_f94fd1294e" placeholder="e.g. Near Saswad Annachhatra" type="text"/></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_c5810cbc9e">Description / Clothing</label><textarea class="form-control" id="mpDesc" data-i18n-placeholder="t_dfd74ab9ad" placeholder="Wearing saffron dhoti, carrying a tulsi mala…" rows="3"></textarea></div>
+<div class="mb-3"><label class="form-label" data-i18n="t_1f99a0d1d9">Your Contact Number</label><input class="form-control" id="mpContact" placeholder="+91" type="tel"/></div>
 <button class="btn w-100 text-white fw-semibold" style="background:var(--sos); border-radius:12px;" type="submit"><i class="bi bi-send-fill me-2"></i><span data-i18n="t_a5662e78a4">Submit Report</span></button>
 </form>
 </div>
@@ -170,49 +170,9 @@
 <div class="col-lg-7">
 <div class="d-flex justify-content-between align-items-center mb-3">
 <h6 class="section-title mb-0" data-i18n="t_886e28b563">Recently Reported</h6>
-<span class="status-pill alert" data-i18n="t_6682c010ea">4 Active Reports</span>
+<span class="status-pill alert" id="mpActiveCountBadge" data-i18n="t_6682c010ea">Active Reports</span>
 </div>
-<div class="swc-card mb-3">
-<div class="d-flex gap-3">
-<div class="svc-emoji" style="background:#FEE2E2;"><i class="bi bi-person-fill text-danger"></i></div>
-<div class="flex-grow-1">
-<div class="d-flex justify-content-between"><div class="svc-name" data-i18n="t_c5adc58218">Kamal Jadhav, 68</div><span class="status-pill alert" data-i18n="t_2aee0be267">Missing</span></div>
-<div class="svc-meta" data-i18n="t_44583cba69">Last seen near Saswad Annachhatra · 2 hrs ago</div>
-<div class="section-sub mt-1" data-i18n="t_fca12c0bc6">Wearing white shirt, saffron dhoti, carrying a wooden stick.</div>
-<button class="btn btn-sm mt-2" data-i18n="t_4774f0221d" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;">I have information</button>
-</div>
-</div>
-</div>
-<div class="swc-card mb-3">
-<div class="d-flex gap-3">
-<div class="svc-emoji" style="background:#FEF3C7;"><i class="bi bi-person-fill text-warning"></i></div>
-<div class="flex-grow-1">
-<div class="d-flex justify-content-between"><div class="svc-name" data-i18n="t_d72b2c6713">Sunita More, 54</div><span class="status-pill busy" data-i18n="t_82a9426e39">Search Ongoing</span></div>
-<div class="svc-meta" data-i18n="t_7271e0eb5e">Last seen near Pune crossing · 4 hrs ago</div>
-<div class="section-sub mt-1" data-i18n="t_48d1ee16cc">Green saree, gold nose ring, carrying a cloth bag.</div>
-<button class="btn btn-sm mt-2" data-i18n="t_4774f0221d" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;">I have information</button>
-</div>
-</div>
-</div>
-<div class="swc-card mb-3">
-<div class="d-flex gap-3">
-<div class="svc-emoji" style="background:var(--emerald-10);"><i class="bi bi-person-check-fill text-success"></i></div>
-<div class="flex-grow-1">
-<div class="d-flex justify-content-between"><div class="svc-name" data-i18n="t_8ea4f9e405">Ramesh Pawar, 71</div><span class="status-pill open" data-i18n="t_7e6e68bf15">Reunited</span></div>
-<div class="svc-meta" data-i18n="t_cf80c93755">Found near Jejuri Road · Reunited with family this morning</div>
-</div>
-</div>
-</div>
-<div class="swc-card">
-<div class="d-flex gap-3">
-<div class="svc-emoji" style="background:#FEE2E2;"><i class="bi bi-person-fill text-danger"></i></div>
-<div class="flex-grow-1">
-<div class="d-flex justify-content-between"><div class="svc-name" data-i18n="t_b60f69271f">Chotu (Age 9)</div><span class="status-pill alert" data-i18n="t_2aee0be267">Missing</span></div>
-<div class="svc-meta" data-i18n="t_adeaa5bea0">Last seen near food camp queue · 30 min ago</div>
-<div class="section-sub mt-1" data-i18n="t_e97799da8e">Blue t-shirt, wearing a Wari ID band on wrist.</div>
-<button class="btn btn-sm mt-2" data-i18n="t_4774f0221d" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;">I have information</button>
-</div>
-</div>
+<div id="warkariMpList">
 </div>
 </div>
 </div>
@@ -272,5 +232,83 @@
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
-<script src="js/i18n.js"></script></body>
+<script src="js/i18n.js"></script>
+<script>
+async function loadWarkariMissingPersons() {
+  try {
+    const res = await fetch('http://localhost:5000/api/missing-persons');
+    if (!res.ok) return;
+    const result = await res.json();
+    if (!result.success || !Array.isArray(result.data)) return;
+
+    const listEl = document.getElementById('warkariMpList');
+    if (!listEl) return;
+
+    const activeCount = result.data.filter(i => i.status === 'Searching' || i.status === 'Pending Verification').length;
+    const badgeEl = document.getElementById('mpActiveCountBadge');
+    if (badgeEl) badgeEl.textContent = `${activeCount} Active Reports`;
+
+    listEl.innerHTML = result.data.map(item => {
+      const isMissing = item.status === 'Searching' || item.status === 'Pending Verification';
+      const bg = isMissing ? '#FEE2E2' : 'var(--emerald-10)';
+      const icon = isMissing ? 'bi-person-fill text-danger' : 'bi-person-check-fill text-success';
+      const pillClass = isMissing ? 'alert' : 'open';
+
+      return `
+        <div class="swc-card mb-3">
+          <div class="d-flex gap-3">
+            <div class="svc-emoji" style="background:${bg};"><i class="bi ${icon}"></i></div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between">
+                <div class="svc-name">${item.name}${item.age ? ', ' + item.age : ''}</div>
+                <span class="status-pill ${pillClass}">${item.status}</span>
+              </div>
+              <div class="svc-meta">Last seen near ${item.lastSeenLocation || 'Wari Route'}</div>
+              <div class="section-sub mt-1">${item.description || 'Traditional warkari attire.'}</div>
+              <button class="btn btn-sm mt-2" style="background:var(--saffron-10); color:var(--deep-orange); font-weight:600;">I have information</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {}
+}
+
+const mpForm = document.getElementById('warkariMpForm');
+if (mpForm) {
+  mpForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('mpName').value;
+    const age = document.getElementById('mpAge').value;
+    const gender = document.getElementById('mpGender').value;
+    const lastSeenLocation = document.getElementById('mpLocation').value;
+    const description = document.getElementById('mpDesc').value;
+    const contactNumber = document.getElementById('mpContact').value;
+
+    try {
+      const res = await fetch('http://localhost:5000/api/missing-persons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          age,
+          gender,
+          lastSeenLocation,
+          description,
+          contactNumber,
+          reporterName: 'Sunil Bhosale',
+          reporterRole: 'WARKARI'
+        })
+      });
+      if (res.ok) {
+        document.getElementById('mpSuccessAlert').classList.remove('d-none');
+        mpForm.reset();
+        loadWarkariMissingPersons();
+      }
+    } catch (err) {}
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadWarkariMissingPersons);
+</script>
+</body>
 </html>

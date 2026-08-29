@@ -66,6 +66,47 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/app.js"></script>
-<script>wireTableSearch('foodSearch','foodTable');</script>
+<script>
+  wireTableSearch('foodSearch','foodTable');
+
+  async function loadFoodCampsAdmin() {
+    try {
+      const res = await fetch('http://localhost:5000/api/services?category=FOOD');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const tbody = document.querySelector('#foodTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = result.data.map(item => {
+        const statusClass = item.status === 'Active' || item.status === 'Open' ? 'badge-active' : 'badge-closed';
+        return `<tr>
+          <td class="fw-semibold">${item.name}</td>
+          <td>${item.location || item.stop}</td>
+          <td class="font-data">24x7 (Active)</td>
+          <td class="font-data">${item.contact || '—'}</td>
+          <td><span class="badge-status ${statusClass}">${item.status}</span></td>
+          <td class="table-actions">
+            <button class="btn btn-outline-soft" title="Edit"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-soft" onclick="deleteServiceItem('${item._id}')" title="Delete"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-outline-soft" title="Location"><i class="bi bi-geo-alt"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  async function deleteServiceItem(id) {
+    if (!confirm('Delete this food camp?')) return;
+    try {
+      await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
+      wariToast('Food camp deleted');
+      loadFoodCampsAdmin();
+    } catch (e) { alert('Delete failed'); }
+  }
+
+  loadFoodCampsAdmin();
+</script>
 </body>
 </html>

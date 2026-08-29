@@ -19,9 +19,9 @@ export const createSOS = async (req, res) => {
     const {
       userId,
       userName,
-      userRole,
+      userRole = "WARKARI",
       emergencyType,
-      message,
+      message = "",
       latitude,
       longitude
     } = req.body;
@@ -44,9 +44,10 @@ export const createSOS = async (req, res) => {
       userName,
       userRole,
       emergencyType,
-      message,
+      message: message || "",
       latitude: Number(latitude),
-      longitude: Number(longitude)
+      longitude: Number(longitude),
+      status: "PENDING"
     });
 
     await emitNotification(req, {
@@ -75,7 +76,13 @@ export const createSOS = async (req, res) => {
 
 export const getAllSOS = async (req, res) => {
   try {
-    const sosRequests = await SOS.find().sort({ createdAt: -1 });
+    const { status, userId } = req.query;
+    const filter = {};
+
+    if (status && status !== "All Status") filter.status = status.toUpperCase();
+    if (userId) filter.userId = userId;
+
+    const sosRequests = await SOS.find(filter).sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,

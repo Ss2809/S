@@ -3,7 +3,7 @@ import PWDRequest from "../models/PWDRequest.js";
 import { emitNotification } from "./notificationController.js";
 
 const PWD_STATUSES = ["Pending", "Accepted", "On the Way", "Reached", "Resolved", "Cancelled"];
-const PWD_PRIORITIES = ["Low", "Medium", "High"];
+const PWD_PRIORITIES = ["Low", "Medium", "High", "Normal", "Urgent"];
 const isValidCoordinate = value => Number.isFinite(Number(value));
 
 export const createPWDRequest = async (req, res) => {
@@ -13,11 +13,11 @@ export const createPWDRequest = async (req, res) => {
       userName,
       assistanceType,
       description,
-      priority,
+      priority = "Medium",
       latitude,
       longitude,
-      locationLabel,
-      emergencyContact
+      locationLabel = "Live GPS location",
+      emergencyContact = ""
     } = req.body;
 
     if (!userId || !userName || !assistanceType || !isValidCoordinate(latitude) || !isValidCoordinate(longitude)) {
@@ -27,27 +27,24 @@ export const createPWDRequest = async (req, res) => {
       });
     }
 
-    if (priority && !PWD_PRIORITIES.includes(priority)) {
-      return res.status(400).json({
-        success: false,
-        message: `Invalid priority. Allowed values: ${PWD_PRIORITIES.join(", ")}`
-      });
-    }
+    let normalizedPriority = priority;
+    if (priority === "Normal") normalizedPriority = "Medium";
+    if (priority === "Urgent") normalizedPriority = "High";
 
     const request = await PWDRequest.create({
       userId,
       userName,
       assistanceType,
-      description,
-      priority: priority || "Medium",
+      description: description || "",
+      priority: normalizedPriority,
       latitude: Number(latitude),
       longitude: Number(longitude),
-      locationLabel,
-      emergencyContact
+      locationLabel: locationLabel || "Live GPS location",
+      emergencyContact: emergencyContact || ""
     });
 
     await emitNotification(req, {
-      audience: "ADMIN",
+      audience: "ALL",
       type: "PWD_CREATED",
       title: "New PWD assistance request",
       message: `${request.userName} requested ${request.assistanceType}`,
@@ -69,7 +66,7 @@ export const getPWDRequests = async (req, res) => {
     const filter = {};
 
     if (userId) filter.userId = userId;
-    if (status) filter.status = status;
+    if (status && status !== "All Status") filter.status = status;
     if (assignedVolunteerId) filter.assignedVolunteerId = assignedVolunteerId;
 
     const requests = await PWDRequest.find(filter).sort({ createdAt: -1 });
@@ -81,6 +78,25 @@ export const getPWDRequests = async (req, res) => {
     });
   } catch (error) {
     console.error("Get PWD requests error:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getPWDRequestById = async (req, res) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({ success: false, message: "Invalid PWD request id" });
+    }
+
+    const request = await PWDRequest.findById(req.params.id);
+
+    if (!request) {
+      return res.status(404).json({ success: false, message: "PWD request not found" });
+    }
+
+    return res.status(200).json({ success: true, data: request });
+  } catch (error) {
+    console.error("Get PWD request by id error:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

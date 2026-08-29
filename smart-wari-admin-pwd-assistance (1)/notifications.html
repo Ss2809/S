@@ -26,35 +26,35 @@
         <div class="col-lg-6">
           <div class="card-surface fade-up">
             <div class="section-title"><span class="flag-dot"></span><h5>Compose Notification</h5></div>
-            <form onsubmit="event.preventDefault(); wariToast('Notification sent to selected audience');">
+            <form id="adminNotifForm">
               <div class="mb-3">
                 <label class="form-label small fw-semibold">Notification Type</label>
-                <select class="form-select">
+                <select class="form-select" id="notifTypeSelect">
                   <option>Heavy Rain</option><option>Road Closed</option><option>Medical Alert</option>
                   <option>Route Change</option><option>VIP Movement</option><option>Emergency</option>
                   <option>PWD Assistance</option><option>General Announcement</option>
                 </select>
               </div>
-              <div class="mb-3"><label class="form-label small fw-semibold">Title</label><input class="form-control" placeholder="e.g. Heavy rain expected near Jejuri" required></div>
-              <div class="mb-3"><label class="form-label small fw-semibold">Message</label><textarea class="form-control" rows="4" placeholder="Write the alert message…" required></textarea></div>
+              <div class="mb-3"><label class="form-label small fw-semibold">Title</label><input class="form-control" id="notifTitle" placeholder="e.g. Heavy rain expected near Jejuri" required></div>
+              <div class="mb-3"><label class="form-label small fw-semibold">Message</label><textarea class="form-control" id="notifMessage" rows="4" placeholder="Write the alert message…" required></textarea></div>
               <div class="row g-3 mb-3">
-                <div class="col-md-6"><label class="form-label small fw-semibold">Location</label><input class="form-control" placeholder="e.g. Jejuri — KM 88"></div>
-                <div class="col-md-6"><label class="form-label small fw-semibold">Priority</label><select class="form-select"><option>High</option><option>Medium</option><option>Low</option></select></div>
+                <div class="col-md-6"><label class="form-label small fw-semibold">Location</label><input class="form-control" id="notifLocation" placeholder="e.g. Jejuri — KM 88"></div>
+                <div class="col-md-6"><label class="form-label small fw-semibold">Priority</label><select class="form-select" id="notifPriority"><option>High</option><option>Medium</option><option>Low</option></select></div>
               </div>
               <div class="mb-4">
                 <label class="form-label small fw-semibold">Target Audience</label>
                 <div class="d-flex flex-wrap gap-3 mt-1">
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tAll" checked><label class="form-check-label small" for="tAll">All Warkaris</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tVol"><label class="form-check-label small" for="tVol">Volunteers</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tRoute"><label class="form-check-label small" for="tRoute">Specific Route</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tDist"><label class="form-check-label small" for="tDist">Specific District</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tStop"><label class="form-check-label small" for="tStop">Specific Wari Stop</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tEmergency"><label class="form-check-label small" for="tEmergency">Emergency — Assigned Volunteer &amp; Van</label></div>
-                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tPwdVol"><label class="form-check-label small" for="tPwdVol">PWD Assistance Volunteers</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tAll" value="ALL" checked><label class="form-check-label small" for="tAll">All Warkaris</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tVol" value="VOLUNTEER"><label class="form-check-label small" for="tVol">Volunteers</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tRoute" value="WARKARI"><label class="form-check-label small" for="tRoute">Specific Route</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tDist" value="WARKARI"><label class="form-check-label small" for="tDist">Specific District</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tStop" value="WARKARI"><label class="form-check-label small" for="tStop">Specific Wari Stop</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tEmergency" value="VOLUNTEER"><label class="form-check-label small" for="tEmergency">Emergency — Assigned Volunteer &amp; Van</label></div>
+                  <div class="form-check"><input class="form-check-input" type="radio" name="target" id="tPwdVol" value="VOLUNTEER"><label class="form-check-label small" for="tPwdVol">PWD Assistance Volunteers</label></div>
                 </div>
                 <select class="form-select mt-2" id="notifyStopSelect" style="display:none;"></select>
               </div>
-              <button class="btn btn-flag w-100" type="submit"><i class="bi bi-send"></i> Send Notification</button>
+              <button class="btn btn-flag w-100" type="submit" id="sendNotifBtn"><i class="bi bi-send"></i> Send Notification</button>
             </form>
           </div>
         </div>
@@ -62,25 +62,12 @@
         <div class="col-lg-6">
           <div class="card-surface fade-up mb-3">
             <div class="section-title"><span class="flag-dot"></span><h5>Recent Broadcasts</h5></div>
-            <div class="em-alert-row" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
-              <div class="d-flex justify-content-between"><span class="badge-status badge-critical">Emergency</span><span class="small text-muted">10:12 AM</span></div>
-              <div class="fw-semibold small mt-2">Diversion at Saswad due to crowd surge</div>
-              <div class="small text-muted">Sent to: All Warkaris on Sant Nivas Palkhi</div>
-            </div>
-            <div class="em-alert-row" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
-              <div class="d-flex justify-content-between"><span class="badge-status" style="background:#F5F3FF;color:#6D28D9;">♿ PWD Assistance</span><span class="small text-muted">10:05 AM</span></div>
-              <div class="fw-semibold small mt-2">New PWD assistance request PWD-3081 received at Wakhari</div>
-              <div class="small text-muted">Sent to: PWD Assistance Volunteers — Wakhari</div>
-            </div>
-            <div class="em-alert-row" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
-              <div class="d-flex justify-content-between"><span class="badge-status badge-pending">Heavy Rain</span><span class="small text-muted">Yesterday</span></div>
-              <div class="fw-semibold small mt-2">Heavy rain expected near Phaltan tonight</div>
-              <div class="small text-muted">Sent to: Phaltan District</div>
-            </div>
-            <div class="em-alert-row mb-0" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
-              <div class="d-flex justify-content-between"><span class="badge-status badge-info">General</span><span class="small text-muted">2 days ago</span></div>
-              <div class="fw-semibold small mt-2">New Digital Warkari ID counters open at Alandi</div>
-              <div class="small text-muted">Sent to: All Warkaris</div>
+            <div id="recentBroadcastsList">
+              <div class="em-alert-row" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
+                <div class="d-flex justify-content-between"><span class="badge-status badge-critical">Emergency</span><span class="small text-muted">Just now</span></div>
+                <div class="fw-semibold small mt-2">Diversion at Saswad due to crowd surge</div>
+                <div class="small text-muted">Sent to: All Warkaris</div>
+              </div>
             </div>
           </div>
           <div class="card-surface fade-up">
@@ -105,11 +92,66 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const stopSelect = document.getElementById('notifyStopSelect');
-  stopSelect.innerHTML = WARI_STOPS.map(s => `<option>${s}</option>`).join('');
+  if (stopSelect && typeof WARI_STOPS !== 'undefined') {
+    stopSelect.innerHTML = WARI_STOPS.map(s => `<option>${s}</option>`).join('');
+  }
   document.querySelectorAll('input[name="target"]').forEach(r => {
     r.addEventListener('change', () => {
-      stopSelect.style.display = document.getElementById('tStop').checked ? 'block' : 'none';
+      if (stopSelect) stopSelect.style.display = document.getElementById('tStop')?.checked ? 'block' : 'none';
     });
+  });
+
+  async function loadRecentBroadcasts() {
+    try {
+      const res = await fetch('http://localhost:5000/api/notifications');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !Array.isArray(result.data)) return;
+
+      const container = document.getElementById('recentBroadcastsList');
+      if (!container || result.data.length === 0) return;
+
+      container.innerHTML = result.data.slice(0, 5).map(n => {
+        const typeClass = n.type.includes('SOS') ? 'badge-critical' : (n.type.includes('PWD') ? 'badge-info' : 'badge-pending');
+        const timeAgo = new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return `<div class="em-alert-row mb-2" style="background:var(--bg);border-color:var(--border);color:var(--ink);">
+          <div class="d-flex justify-content-between"><span class="badge-status ${typeClass}">${n.type}</span><span class="small text-muted">${timeAgo}</span></div>
+          <div class="fw-semibold small mt-2">${n.title}</div>
+          <div class="small text-muted">${n.message} (Sent to: ${n.audience})</div>
+        </div>`;
+      }).join('');
+    } catch (e) {}
+  }
+
+  loadRecentBroadcasts();
+
+  document.getElementById('adminNotifForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const type = document.getElementById('notifTypeSelect').value;
+    const title = document.getElementById('notifTitle').value.trim();
+    const message = document.getElementById('notifMessage').value.trim();
+    const targetEl = document.querySelector('input[name="target"]:checked');
+    const audience = targetEl ? targetEl.value : 'ALL';
+    const btn = document.getElementById('sendNotifBtn');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('http://localhost:5000/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, title, message, audience })
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.message || 'Send failed');
+
+      wariToast('Notification sent to ' + audience);
+      document.getElementById('adminNotifForm').reset();
+      loadRecentBroadcasts();
+    } catch (err) {
+      alert(err.message || 'Notification broadcast failed');
+    } finally {
+      btn.disabled = false;
+    }
   });
 });
 </script>

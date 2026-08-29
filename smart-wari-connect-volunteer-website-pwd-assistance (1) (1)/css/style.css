@@ -199,6 +199,11 @@ a{ text-decoration:none; }
 }
 .map-filter-chip.active{ background:var(--emerald); border-color:var(--emerald); color:#fff; }
 .legend-dot{ width:11px;height:11px;border-radius:50%; display:inline-block; margin-right:.4rem; }
+#liveMap{ width:100%; height:460px; }
+
+@media (max-width:991.98px){
+  #liveMap{ height:320px; }
+}
 
 /* ===== Missing person / medical / lost&found cards ===== */
 .svc-card{ display:flex; align-items:center; gap:.9rem; border:1px solid var(--border); border-radius:14px; padding:.85rem; background:#fff; }

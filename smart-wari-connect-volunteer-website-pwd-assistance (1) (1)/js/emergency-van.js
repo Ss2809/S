@@ -39,6 +39,93 @@ document.addEventListener('DOMContentLoaded', function () {
   const vanMarker = L.marker([vanLoc.lat, vanLoc.lng], { icon: emojiIcon('🚑') })
     .addTo(map).bindPopup('Emergency Van · AMB-004');
 
+  const liveWarkariMarkers = {};
+  const liveSosMarkers = {};
+  const activeSosStatuses = ['PENDING', 'ASSIGNED', 'ACCEPTED', 'ON_THE_WAY', 'REACHED'];
+
+  function updateLiveWarkariMarkers(locations) {
+    const receivedUserIds = new Set();
+    locations.filter(location => location.role === 'WARKARI').forEach(location => {
+      const latitude = Number(location.latitude);
+      const longitude = Number(location.longitude);
+      if (!location.userId || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+      receivedUserIds.add(location.userId);
+      const coordinates = [latitude, longitude];
+      const marker = liveWarkariMarkers[location.userId];
+      if (marker) {
+        marker.setLatLng(coordinates);
+      } else {
+        liveWarkariMarkers[location.userId] = L.marker(coordinates, { icon: emojiIcon('📍') }).addTo(map);
+      }
+      liveWarkariMarkers[location.userId].bindPopup('<strong>' + (location.name || 'Warkari') + '</strong><br>Role: WARKARI');
+    });
+
+    Object.keys(liveWarkariMarkers).forEach(userId => {
+      if (!receivedUserIds.has(userId)) {
+        map.removeLayer(liveWarkariMarkers[userId]);
+        delete liveWarkariMarkers[userId];
+      }
+    });
+  }
+
+  function updateLiveSosMarkers(sosRequests) {
+    const receivedSosIds = new Set();
+    sosRequests.filter(sos => activeSosStatuses.includes(sos.status)).forEach(sos => {
+      const latitude = Number(sos.latitude);
+      const longitude = Number(sos.longitude);
+      if (!sos._id || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+      receivedSosIds.add(sos._id);
+      const coordinates = [latitude, longitude];
+      const marker = liveSosMarkers[sos._id];
+      if (marker) {
+        marker.setLatLng(coordinates);
+      } else {
+        liveSosMarkers[sos._id] = L.marker(coordinates, { icon: emojiIcon('🚨') }).addTo(map);
+      }
+      liveSosMarkers[sos._id].bindPopup(
+        '<strong>' + (sos.userName || 'Warkari') + '</strong><br>' +
+        (sos.emergencyType || 'Emergency') + '<br>' +
+        (sos.message || '') + '<br>Status: ' + sos.status
+      );
+    });
+
+    Object.keys(liveSosMarkers).forEach(sosId => {
+      if (!receivedSosIds.has(sosId)) {
+        map.removeLayer(liveSosMarkers[sosId]);
+        delete liveSosMarkers[sosId];
+      }
+    });
+  }
+
+  function refreshLiveMapData() {
+    fetch('http://localhost:5000/api/locations')
+      .then(response => {
+        if (!response.ok) throw new Error('Location request failed with status ' + response.status);
+        return response.json();
+      })
+      .then(result => {
+        if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid locations response');
+        updateLiveWarkariMarkers(result.data);
+      })
+      .catch(error => console.error('Live Warkari map API error:', error));
+
+    fetch('http://localhost:5000/api/sos')
+      .then(response => {
+        if (!response.ok) throw new Error('SOS request failed with status ' + response.status);
+        return response.json();
+      })
+      .then(result => {
+        if (!result.success || !Array.isArray(result.data)) throw new Error('Invalid SOS response');
+        updateLiveSosMarkers(result.data);
+      })
+      .catch(error => console.error('Live SOS map API error:', error));
+  }
+
+  refreshLiveMapData();
+  setInterval(refreshLiveMapData, 4000);
+
   let routeLine = L.polyline([[vanLoc.lat, vanLoc.lng], [VARKARI_LOC.lat, VARKARI_LOC.lng]], {
     color: '#DC2626', weight: 3, dashArray: '6 6'
   }).addTo(map);

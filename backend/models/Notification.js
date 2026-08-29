@@ -10,7 +10,7 @@ const notificationSchema = new mongoose.Schema(
     userId: { type: String, trim: true, default: null },
     type: {
       type: String,
-      enum: ["SOS_CREATED", "SOS_ASSIGNED", "SOS_STATUS_CHANGED", "PWD_CREATED", "PWD_ASSIGNED", "PWD_STATUS_CHANGED", "LOCATION_UPDATED", "SYSTEM"],
+      trim: true,
       default: "SYSTEM"
     },
     title: { type: String, required: true, trim: true },

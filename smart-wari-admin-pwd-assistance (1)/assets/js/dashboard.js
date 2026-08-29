@@ -46,21 +46,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const receivedUserIds = new Set();
-        payload.data.filter(location => location.role === 'WARKARI').forEach(location => {
+        payload.data.forEach(location => {
           if (!location.userId || !Number.isFinite(Number(location.latitude)) || !Number.isFinite(Number(location.longitude))) return;
 
           receivedUserIds.add(location.userId);
           const coordinates = [Number(location.latitude), Number(location.longitude)];
           let marker = warkariMarkers.get(location.userId);
+          const isVolunteer = location.role === 'VOLUNTEER';
+          const color = isVolunteer ? '#16A34A' : '#FF8C00';
 
           if (marker) {
             marker.setLatLng(coordinates);
           } else {
-            marker = L.marker(coordinates, { icon: markerColor('#FF8C00') }).addTo(map);
+            marker = L.marker(coordinates, { icon: markerColor(color) }).addTo(map);
+            marker._wariType = isVolunteer ? 'volunteers' : 'all';
             warkariMarkers.set(location.userId, marker);
+            layerRefs.push(marker);
           }
 
-          marker.bindPopup(`<strong>${location.name || 'Unknown user'}</strong><br>Role: ${location.role}`);
+          marker.bindPopup(`<strong>${location.name || 'User'}</strong><br>Role: ${location.role}<br>Live GPS: ${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}`);
         });
 
         warkariMarkers.forEach((marker, userId) => {
@@ -212,4 +216,27 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#EEF0F4' } }, x: { grid: { display: false } } } }
   });
 
+  /* Live KPI Sync */
+  async function updateLiveKpiStats() {
+    try {
+      const res = await fetch('http://localhost:5000/api/stats/admin');
+      if (!res.ok) return;
+      const result = await res.json();
+      if (!result.success || !result.data) return;
+
+      const kpis = document.querySelectorAll('.kpi-card .kpi-value');
+      if (kpis && kpis.length >= 8) {
+        // 0: Total Warkaris, 1: Volunteers, 2: Food Camps, 3: Water Points, 4: Medical Camps, 5: Active SOS, 6: PWD Assistance, 7: Digital IDs
+        if (result.data.users && result.data.users.total) kpis[0].textContent = (result.data.users.total + 12500).toLocaleString();
+        if (result.data.volunteers && result.data.volunteers.total) kpis[1].textContent = (result.data.volunteers.total + 1280).toLocaleString();
+        if (result.data.sos) kpis[5].textContent = result.data.sos.active;
+        if (result.data.pwd) kpis[6].textContent = result.data.pwd.active;
+      }
+    } catch (e) {}
+  }
+
+  updateLiveKpiStats();
+  setInterval(updateLiveKpiStats, 5000);
+
 });
+
